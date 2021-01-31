@@ -3,7 +3,7 @@ The repo I clone and build my bots on top of, made using [Serenity](https://gith
 Yes, this could be a crate but I find it more convenient this way and I do realise no one else is going to use this
 
 ## Set up?
-Just clone this repo, and run it with `cargo run` (Yes that's it, it'll guide you through the rest!)  
+Just clone this repo, and in your terminal `cd` into the folder with `Cargo.toml`, and run it with `cargo run` (Yes that's it, it'll guide you through the rest!)  
 Then you code on top of it of course
 
 ## Customise it?
