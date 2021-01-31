@@ -1,4 +1,4 @@
-use discord_base::{Handler, config_parser::Config};
+use discord_base::{config_parser::Config, Handler};
 use serenity::Client;
 
 #[tokio::main]
