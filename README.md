@@ -6,8 +6,7 @@ Yes, this could be a crate but I find it more convenient this way and I do reali
 Just clone this repo, and in your terminal `cd` into the folder with `Cargo.toml`, and run it with `cargo run` (Yes that's it, it'll guide you through the rest!)  
 Then you code on top of it of course
 
-## Customise it?
-You can:
+## Customise it? You can:
 - obviously edit the config file
 - rename the folder and edit `Cargo.toml` however you want (don't touch the dependencies though)
 - change the path/name of the config file at `Config::set(path: &str)` in `main.rs`
@@ -31,10 +30,10 @@ You can:
 ## Who am I?
 Just some 17 years old (currently) girl from Turkey coding  
 Started with Python, gave a shot to JS but now that I know Rust exists never going back  
-Basically all I did was Discord bots (at least until when I'm writing this)  
+Basically all I did was Discord bots (at least at the time of writing)  
 License and stuff I don't care, neither do you but contact me if you want to ask anything, or donate for some reason
 
 ## Contact
-- Fastest: Discord: aria#7553
-- Slower: GitHub issues or something
+- Very Fast: Discord: aria#7553
+- Slow: GitHub issues or something
 - Way slower (or never, if you're unlucky): wentaas@gmail.com
