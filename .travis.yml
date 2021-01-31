@@ -18,6 +18,8 @@ jobs:
   allow_failures:
     - rust: beta
     - rust: nightly
+    - arch: ppc64le
+    - arch: s390x
   fast_finish: true
 cache: cargo
 compiler:
