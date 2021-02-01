@@ -1,6 +1,6 @@
 use once_cell::sync::OnceCell;
 use serde::Deserialize;
-use std::{fs, io, process};
+use std::{fs, io};
 
 const DEFAULT_CONFIG: &'static str =
     "# The token of the bot: https://discordpy.readthedocs.io/en/latest/discord.html
@@ -27,8 +27,7 @@ impl Config {
                         "Couldn't write the default config, write it manually please:\n{}",
                         DEFAULT_CONFIG
                     ));
-                    println!("Created the default config, edit it and restart please");
-                    process::exit(0)
+                    panic!("Created the default config, edit it and restart please");
                 } else {
                     panic!(err)
                 }
@@ -40,7 +39,7 @@ impl Config {
             .unwrap_or_else(|_| panic!("Couldn't set the config to CONFIG"));
     }
 
-    pub fn get() -> &'static Config {
-        CONFIG.get().expect("CONFIG not initalized")
+    pub fn get() -> Option<&'static Config> {
+        CONFIG.get()
     }
 }

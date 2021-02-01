@@ -12,13 +12,12 @@ Then you code on top of it of course
 - change the path/name of the config file at `Config::set(path: &str)` in `main.rs`
 - change the default config that's written at `DEFAULT_CONFIG` in `config_parser.rs`
 - generally edit any string ever used by the program by just searching for it and editing it
-- and just do whatever else you want, make sure to edit though, of course
+- and just do whatever else you want, of course make sure to test it though
 
 ## What it can do (for now)
 - Print and DM the owner when it's ready
 
 ## To do list:
-- Set the panic hook (what to do when the program panics)
 - Global prefix from the config file
 - `help`, `commands`, `info`, `about`, `invite` commands
 - Setting the bot's activity status to `Listening to {prefix}help`
