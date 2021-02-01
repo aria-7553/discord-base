@@ -25,7 +25,7 @@ pub async fn log(ctx: &Context, owner_id: Option<u64>, msg: &str) {
         Some(owner_id) => {
             if let Err(err) = match UserId::from(owner_id).create_dm_channel(ctx).await {
                 Ok(channel) => match channel.say(ctx, msg).await {
-                    Ok(message) => Ok(message),
+                    Ok(_) => Ok(()),
                     Err(err) => Err(err),
                 },
                 Err(err) => Err(err),
