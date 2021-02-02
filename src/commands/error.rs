@@ -1,3 +1,5 @@
+use std::borrow::Cow;
+
 use crate::send_embed;
 use serenity::{
     client::Context,
@@ -7,71 +9,73 @@ use serenity::{
 
 #[hook]
 pub async fn handle(ctx: &Context, msg: &Message, error: DispatchError) {
-    let info = match error {
+    let info = match &error {
         DispatchError::CheckFailed(info, reason) => {
             if let Reason::User(reason) = reason {
-                Some(format!(
-                    "Seems like you don't pass the check.. {}\n{}",
-                    reason, info
-                ))
+                Some(Cow::from(format!("Seems like you don't pass the check.. {}\n{}", reason, info)))
             } else {
-                Some(format!("Seems like you don't pass the check.. {}", info))
+                Some(format!("Seems like you don't pass the check.. {}", info).into())
             }
         }
         DispatchError::Ratelimited(info) => {
             if info.is_first_try {
-                Some(format!(
-                    "Calm down and try again in {} seconds please",
-                    info.as_secs()
-                ))
+                Some(
+                    format!(
+                        "Calm down and try again in {} seconds please",
+                        info.as_secs()
+                    )
+                    .into(),
+                )
             } else {
                 None
             }
         }
-        DispatchError::CommandDisabled(info) => Some(info),
-        DispatchError::BlockedUser => Some(String::from(
-            "Oops, you're blocked to use this command for some reason..",
-        )),
-        DispatchError::BlockedGuild => Some(String::from(
-            "Oops, the guild or its owner is blocked to use this command for some reason..",
-        )),
-        DispatchError::BlockedChannel => Some(String::from(
-            "Oops, the channel is blocked to use this command for some reason..",
-        )),
-        DispatchError::OnlyForDM => {
-            Some(String::from("You can only use this command in my DMs 😳"))
+        DispatchError::CommandDisabled(info) => Some(info.into()),
+        DispatchError::BlockedUser => {
+            Some("Oops, you're blocked to use this command for some reason..".into())
         }
-        DispatchError::OnlyForGuilds => {
-            Some(String::from("You can only use this command in a guild"))
+        DispatchError::BlockedGuild => {
+            Some("Oops, the guild or its owner is blocked to use this command for some reason..".into())
         }
-        DispatchError::OnlyForOwners => {
-            Some(String::from("This command is dedicated to my master"))
+        DispatchError::BlockedChannel => {
+            Some("Oops, the channel is blocked to use this command for some reason..".into())
         }
-        DispatchError::LackingRole => Some(String::from(
-            "You don't have the roles required for this command..",
-        )),
-        DispatchError::LackingPermissions(perms) => Some(format!(
-            "You need these permissions to run this command and you don't have them 😤:\n{}",
-            perms.get_permission_names().join("\n")
-        )),
-        DispatchError::NotEnoughArguments { min, given } => Some(format!(
-            "This command needs {} arguments™ after it but you only gave {}..",
-            min, given
-        )),
-        DispatchError::TooManyArguments { max, given } => Some(format!(
-            "This command can't take more than {} arguments™ but you gave {}..",
-            max, given
-        )),
-        _ => Some(String::from("You discovered a very mysterious error")),
+        DispatchError::OnlyForDM => Some("You can only use this command in my DMs 😳".into()),
+        DispatchError::OnlyForGuilds => Some("You can only use this command in a guild".into()),
+        DispatchError::OnlyForOwners => Some("This command is dedicated to my master".into()),
+        DispatchError::LackingRole => Some("You don't have the roles required for this command..".into()),
+        DispatchError::LackingPermissions(perms) => Some(
+            format!(
+                "You need these permissions to run this command and you don't have them 😤:\n{}",
+                perms.get_permission_names().join("\n")
+            )
+            .into(),
+        ),
+        DispatchError::NotEnoughArguments { min, given } => Some(
+            format!(
+                "This command needs {} arguments™ after it but you only gave {}..",
+                min, given
+            )
+            .into(),
+        ),
+        DispatchError::TooManyArguments { max, given } => Some(
+            format!(
+                "This command can't take more than {} arguments™ but you gave {}..",
+                max, given
+            )
+            .into(),
+        ),
+        _ => Some("You discovered a very mysterious error".into()),
     };
     if let Some(info) = info {
         send_embed(
             ctx,
             msg,
             15037299,
-            &info,
-            &String::from("Ugh, something is wrong, I can feel it.."),
-            None,
+            info,
+            "Ugh, something is wrong, I can feel it..",
+            None::<Vec<(&str, &str, bool)>>,
+            None::<&str>,
         )
         .await;
     }

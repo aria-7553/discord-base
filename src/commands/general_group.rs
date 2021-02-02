@@ -1,3 +1,5 @@
+use std::borrow::Cow;
+
 use crate::{config_parser::Config, log, send_embed};
 use serenity::{
     client::Context,
@@ -6,6 +8,7 @@ use serenity::{
         CommandResult,
     },
     model::channel::Message,
+    prelude::Mentionable,
 };
 
 #[group("General Stuff")]
@@ -18,8 +21,12 @@ struct General;
 #[description = "How you can add me to your server, contact my owner, my GitHub page etc."]
 #[aliases("about", "invite", "inv")]
 async fn cmd_info(ctx: &Context, msg: &Message) -> CommandResult {
-    let (description, colour) = match ctx.http.get_current_application_info().await {
-        Ok(info) => (info.description, 8505220),
+    let (description, owner, colour) = match ctx.http.get_current_application_info().await {
+        Ok(info) => (
+            Cow::from(info.description),
+            info.owner.id.mention().to_string().into(),
+            8505220,
+        ),
         Err(err) => {
             log(
                 ctx,
@@ -30,29 +37,32 @@ async fn cmd_info(ctx: &Context, msg: &Message) -> CommandResult {
             )
             .await;
             (
-                String::from("Awkward but I think I forgot who I am.."),
+                "Awkward but I think I forgot who I am..".into(),
+                "Oh, I forgot my creator too.. Sorry creator..".into(),
                 15037299,
             )
         }
     };
-    let (title, invite) = match Config::get() {
+    let (title, invite, github) = match Config::get() {
         Some(config) => (
-            String::from("Want me in your server? Click here then!"),
+            "Want me in your server? Click here then!",
             Some(&config.invite),
+            Cow::from(&config.github),
         ),
         None => {
-            log(
-                ctx,
-                &String::from("Couldn't get Config for the `info` command"),
-            )
-            .await;
+            log(ctx, "Couldn't get Config for the `info` command").await;
             (
-                String::from("Oops, I lost my invite, I swear I had it right here"),
+                "Oops, I lost my invite, I swear I had it right here",
                 None,
+                "I forgot my GitHub page too..".into(),
             )
         }
     };
-    send_embed(ctx, msg, colour, &description, &title, invite).await;
+    let fields = Some(vec![
+        ("Made by:", owner, true),
+        ("On GitHub:", github, true),
+    ]);
+    send_embed(ctx, msg, colour, description, title, fields, invite).await;
 
     Ok(())
 }

@@ -7,12 +7,16 @@ const DEFAULT_CONFIG: &'static str =
 token = \"TOKEN HERE\"
 
 # The invite link for the bot: https://discordpy.readthedocs.io/en/latest/discord.html#inviting-your-bot
-invite = \"https://discord.com/api/oauth2/THE REST OF THE LINK HERE\"";
+invite = \"https://discord.com/api/oauth2/ THE REST OF THE LINK HERE\"
+
+# The link of the bot's repo's GitHub's page
+github = \"https://github.com/ USER NAME HERE/REPO NAME HERE\"";
 
 #[derive(Deserialize)]
 pub struct Config {
     pub token: String,
     pub invite: String,
+    pub github: String,
 }
 
 static CONFIG: OnceCell<Config> = OnceCell::new();
