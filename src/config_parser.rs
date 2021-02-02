@@ -3,7 +3,7 @@ use serde::Deserialize;
 use std::{fs, io};
 
 const DEFAULT_CONFIG: &'static str =
-    "# The token of the bot: https://discordpy.readthedocs.io/en/latest/discord.html
+    "# The token of the bot: https://discordpy.readthedocs.io/en/latest/discord.html#creating-a-bot-account
 token = \"TOKEN HERE\"
 
 # The invite link for the bot: https://discordpy.readthedocs.io/en/latest/discord.html#inviting-your-bot
