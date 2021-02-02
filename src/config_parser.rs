@@ -9,6 +9,7 @@ token = \"TOKEN HERE\"";
 #[derive(Deserialize)]
 pub struct Config {
     pub token: String,
+    pub invite: String,
 }
 
 static CONFIG: OnceCell<Config> = OnceCell::new();

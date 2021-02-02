@@ -7,7 +7,7 @@ use serenity::{
     model::channel::Message,
 };
 
-use crate::{log, send_embed};
+use crate::{config_parser::Config, log, send_embed};
 
 #[group("General Stuff")]
 #[commands(cmd_info)]
@@ -17,7 +17,7 @@ struct General;
 #[bucket = "general"]
 #[help_available]
 #[description = "How you can add me to your server, contact my owner, my GitHub page etc."]
-#[aliases("about", "invite")]
+#[aliases("about", "invite", "inv")]
 async fn cmd_info(ctx: &Context, msg: &Message) -> CommandResult {
     let (description, colour) = match ctx.http.get_current_application_info().await {
         Ok(info) => (info.description, 7855479),
@@ -36,14 +36,24 @@ async fn cmd_info(ctx: &Context, msg: &Message) -> CommandResult {
             )
         }
     };
-    send_embed(
-        ctx,
-        msg,
-        colour,
-        &description,
-        &String::from("Want me in your server? Click here then!"),
-    )
-    .await;
+    let (title, invite) = match Config::get() {
+        Some(config) => (
+            String::from("Want me in your server? Click here then!"),
+            Some(&config.invite),
+        ),
+        None => {
+            log(
+                ctx,
+                &String::from("Couldn't get Config for the `info` command"),
+            )
+            .await;
+            (
+                String::from("Oops, I lost my invite, I swear I had it right here"),
+                None,
+            )
+        }
+    };
+    send_embed(ctx, msg, colour, &description, &title, invite).await;
 
     Ok(())
 }

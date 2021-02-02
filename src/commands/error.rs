@@ -72,6 +72,7 @@ pub async fn handle(ctx: &Context, msg: &Message, error: DispatchError) {
             16738657,
             &info,
             &String::from("Ugh, something is wrong, I can feel it.."),
+            None,
         )
         .await;
     }

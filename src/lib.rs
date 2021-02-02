@@ -22,14 +22,18 @@ async fn send_embed(
     colour: u32,
     description: &String,
     title: &String,
+    url: Option<&String>,
 ) {
     if let Err(err) = reply
         .channel_id
         .send_message(ctx, |m| {
             m.embed(|e| {
-                e.colour(Colour::new(colour));
-                e.description(description);
-                e.title(title)
+                if let Some(url) = url {
+                    e.url(url);
+                };
+                e.colour(Colour::new(colour))
+                    .description(description)
+                    .title(title)
             })
         })
         .await
