@@ -1,5 +1,3 @@
-use std::collections::HashSet;
-
 use serenity::{
     client::Context,
     framework::standard::{
@@ -7,6 +5,7 @@ use serenity::{
     },
     model::{channel::Message, id::UserId},
 };
+use std::collections::HashSet;
 
 #[help("help", "commands", "cmds")]
 #[suggestion_text = "**Maybe you meant one of these:**\n{}"]
@@ -27,8 +26,8 @@ use serenity::{
 #[lacking_ownership = "Hide"]
 #[lacking_conditions = "Hide"]
 #[wrong_channel = "Strike"]
-#[embed_error_colour = "#FF6961"]
-#[embed_success_colour = "#77DD77"]
+#[embed_error_colour = "#E57373"]
+#[embed_success_colour = "#81C784"]
 #[max_levenshtein_distance(3)]
 #[indention_prefix = "♡"]
 async fn cmd_help(

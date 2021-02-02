@@ -51,7 +51,7 @@ async fn send_embed(
             let owner_mention = ctx.cache.current_user_id().await.mention();
             if let Err(err) = reply.author.dm(ctx, |m| {
                 m.embed(|e| {
-                    e.colour(Colour::new(16738657))
+                    e.colour(Colour::new(15037299))
                      .description(format!(
                          "{}\nLet the admins know so they can fix it\n*Or if this is a weird error please let my owner know at {}* 👉👈",
                          err, owner_mention))

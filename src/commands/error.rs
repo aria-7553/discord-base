@@ -1,10 +1,9 @@
+use crate::send_embed;
 use serenity::{
     client::Context,
     framework::standard::{macros::hook, DispatchError, Reason},
     model::channel::Message,
 };
-
-use crate::send_embed;
 
 #[hook]
 pub async fn handle(ctx: &Context, msg: &Message, error: DispatchError) {
@@ -69,7 +68,7 @@ pub async fn handle(ctx: &Context, msg: &Message, error: DispatchError) {
         send_embed(
             ctx,
             msg,
-            16738657,
+            15037299,
             &info,
             &String::from("Ugh, something is wrong, I can feel it.."),
             None,

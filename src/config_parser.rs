@@ -4,7 +4,10 @@ use std::{fs, io};
 
 const DEFAULT_CONFIG: &'static str =
     "# The token of the bot: https://discordpy.readthedocs.io/en/latest/discord.html
-token = \"TOKEN HERE\"";
+token = \"TOKEN HERE\"
+
+# The invite link for the bot: https://discordpy.readthedocs.io/en/latest/discord.html#inviting-your-bot
+invite = \"https://discord.com/api/oauth2/THE REST OF THE LINK HERE\"";
 
 #[derive(Deserialize)]
 pub struct Config {

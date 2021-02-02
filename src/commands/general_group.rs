@@ -1,3 +1,4 @@
+use crate::{config_parser::Config, log, send_embed};
 use serenity::{
     client::Context,
     framework::standard::{
@@ -6,8 +7,6 @@ use serenity::{
     },
     model::channel::Message,
 };
-
-use crate::{config_parser::Config, log, send_embed};
 
 #[group("General Stuff")]
 #[commands(cmd_info)]
@@ -20,7 +19,7 @@ struct General;
 #[aliases("about", "invite", "inv")]
 async fn cmd_info(ctx: &Context, msg: &Message) -> CommandResult {
     let (description, colour) = match ctx.http.get_current_application_info().await {
-        Ok(info) => (info.description, 7855479),
+        Ok(info) => (info.description, 8505220),
         Err(err) => {
             log(
                 ctx,
@@ -32,7 +31,7 @@ async fn cmd_info(ctx: &Context, msg: &Message) -> CommandResult {
             .await;
             (
                 String::from("Awkward but I think I forgot who I am.."),
-                16738657,
+                15037299,
             )
         }
     };
