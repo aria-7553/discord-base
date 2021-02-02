@@ -12,7 +12,6 @@ owner_id = 0";
 #[derive(Deserialize)]
 pub struct Config {
     pub token: String,
-    pub owner_id: u64,
 }
 
 static CONFIG: OnceCell<Config> = OnceCell::new();
