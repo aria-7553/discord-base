@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 
-use crate::{config_parser::Config, log, send_embed};
+use crate::{set_statics::BotConfig, log, send_embed};
 use serenity::{
     client::Context,
     framework::standard::{
@@ -43,7 +43,7 @@ async fn cmd_info(ctx: &Context, msg: &Message) -> CommandResult {
             )
         }
     };
-    let (title, invite, github) = match Config::get() {
+    let (title, invite, github) = match BotConfig::get() {
         Some(config) => (
             "Want me in your server? Click here then!",
             Some(&config.invite),

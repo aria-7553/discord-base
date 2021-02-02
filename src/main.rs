@@ -1,13 +1,20 @@
-use discord_base::{commands, config_parser::Config};
+use discord_base::{
+    commands,
+    set_statics::{BotConfig, BotInfo},
+};
 use serenity::Client;
 
 #[tokio::main]
 async fn main() {
-    Config::set("config.toml");
-    let token = &Config::get()
-        .expect("Couldn't access CONFIG to get the token")
+    BotConfig::set("config.toml");
+    let token = &BotConfig::get()
+        .expect("Couldn't access BOT_CONFIG to get the token")
         .token;
-    let framework = commands::config::get_framework(token).await;
+
+    BotInfo::set(token).await;
+    let bot_info = BotInfo::get().expect("Couldn't access BOT_INFO to get the owner and bot ID");
+
+    let framework = commands::options::get_framework(bot_info.bot_id, bot_info.owner_id).await;
 
     let mut client = Client::builder(token)
         .event_handler(discord_base::Handler)

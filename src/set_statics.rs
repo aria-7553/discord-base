@@ -1,5 +1,6 @@
 use once_cell::sync::OnceCell;
 use serde::Deserialize;
+use serenity::{http::client::Http, model::id::UserId};
 use std::{fs, io};
 
 const DEFAULT_CONFIG: &'static str =
@@ -13,18 +14,17 @@ invite = \"https://discord.com/api/oauth2/ THE REST OF THE LINK HERE\"
 github = \"https://github.com/ USER NAME HERE/REPO NAME HERE\"";
 
 #[derive(Deserialize)]
-pub struct Config {
+pub struct BotConfig {
     pub token: String,
     pub invite: String,
     pub github: String,
 }
 
-static CONFIG: OnceCell<Config> = OnceCell::new();
+static BOT_CONFIG: OnceCell<BotConfig> = OnceCell::new();
 
-impl Config {
-    /// Reads the config and saves it to CONFIG or creates the DEFAULT_CONFIG
+impl BotConfig {
     pub fn set(config_path: &str) {
-        let config: Config =
+        let config: BotConfig =
             toml::from_str(&fs::read_to_string(config_path).unwrap_or_else(|err| {
                 if err.kind() == io::ErrorKind::NotFound {
                     fs::write(config_path, DEFAULT_CONFIG).expect(&format!(
@@ -38,12 +38,43 @@ impl Config {
             }))
             .expect("Looks like something is wrong with your config");
 
-        CONFIG
+        BOT_CONFIG
             .set(config)
-            .unwrap_or_else(|_| panic!("Couldn't set the config to CONFIG"));
+            .unwrap_or_else(|_| panic!("Couldn't set the config to BOT_CONFIG"));
     }
 
-    pub fn get() -> Option<&'static Config> {
-        CONFIG.get()
+    pub fn get() -> Option<&'static BotConfig> {
+        BOT_CONFIG.get()
+    }
+}
+
+pub struct BotInfo {
+    pub owner_id: UserId,
+    pub bot_id: UserId,
+    description: String,
+}
+
+static BOT_INFO: OnceCell<BotInfo> = OnceCell::new();
+
+impl BotInfo {
+    pub async fn set(token: &str) {
+        let app_info = Http::new_with_token(token)
+            .get_current_application_info()
+            .await
+            .expect("Couldn't access application info:");
+
+        let info = BotInfo {
+            owner_id: app_info.owner.id,
+            bot_id: app_info.id,
+            description: app_info.description,
+        };
+
+        BOT_INFO
+            .set(info)
+            .unwrap_or_else(|_| panic!("Couldn't set the info to BOT_INFO"))
+    }
+
+    pub fn get() -> Option<&'static BotInfo> {
+        BOT_INFO.get()
     }
 }

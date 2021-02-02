@@ -1,5 +1,5 @@
 pub mod commands;
-pub mod config_parser;
+pub mod set_statics;
 
 use std::fmt::Display;
 
