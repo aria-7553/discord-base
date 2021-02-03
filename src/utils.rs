@@ -1,87 +1,98 @@
+use crate::set_statics::BotInfo;
 use serenity::{
+    builder::CreateEmbed,
     client::Context,
     model::{channel::Message, misc::Mentionable},
     utils::Colour,
 };
-use std::fmt::Display;
+use std::{fmt::Display, io::Write};
 
-pub async fn send_embed<T: Display, U: Display, F: Display, S: Display, D: Display>(
-    ctx: &Context,
-    reply: &Message,
-    is_error: bool,
-    description: T,
-    title: U,
-    fields: Option<Vec<(F, S, bool)>>,
-    url: Option<D>,
-) {
-    if let Err(err) = reply
-        .channel_id
-        .send_message(ctx, |m| {
-            m.embed(|e| {
-                if let Some(fields) = fields {
-                    e.fields(fields);
-                };
-                if let Some(url) = url {
-                    e.url(url);
-                };
-                e.colour(match is_error {
-                    true => Colour::new(11534368),
-                    false => Colour::new(15702682),
-                })
-                .description(&description)
-                .title(&title)
-            })
-        })
-        .await
-    {
-        if let Err(err) = reply
-            .channel_id
-            .say(
-                ctx,
-                format!(
-                "Oops, couldn't send the message 🤦‍♀️: {}\nSo here it is in ugly form:\n**{}**\n{}",
-                err, &title, &description),
-            )
+pub async fn send_embed(ctx: &Context, reply: &Message, is_error: bool, mut embed: CreateEmbed) {
+    let channel = reply.channel_id;
+    let info = BotInfo::get();
+    if let Some(info) = info {
+        embed.colour(match is_error {
+            true => info.colour,
+            false => info.error_colour,
+        });
+    }
+
+    if let Err(err) = channel.send_message(ctx, |m| m.set_embed(embed)).await {
+        if let Err(err) = channel
+            .say(ctx, format!("Oops, couldn't send the message 🤦‍♀️: {}", err))
             .await
         {
-            let owner_mention = ctx.cache.current_user_id().await.mention();
-            if let Err(err) = reply.author.dm(ctx, |m| {
-                m.embed(|e| {
-                    e.colour(Colour::new(15037299))
-                     .description(format!(
-                         "{}\nLet the admins know so they can fix it\n*Or if this is a weird error please let my owner know at {}* 👉👈",
-                         err, owner_mention))
-                     .title(format!(
-                         "Looks like I can't send messages in {}",
-                         reply.channel_id.mention()))
+            if let Err(err) = reply
+                .author
+                .dm(ctx, |m| {
+                    m.embed(|e| {
+                        e.colour(Colour::new(15037299))
+                            .description(format!(
+                                "{}\nLet the admins know so they can fix it\n",
+                                err
+                            ))
+                            .title(format!(
+                                "Looks like I can't send messages in {} :(",
+                                reply.channel_id.mention()
+                            ))
+                    })
                 })
-            }).await {
-                log(ctx, &format!(
-                    "Couldn't even send the message to inform the commander: {}", err)).await
+                .await
+            {
+                log(
+                    ctx,
+                    format!(
+                        "Couldn't even send the message to inform the commander: {}",
+                        err
+                    ),
+                )
+                .await
             }
         }
     }
 }
 
-pub async fn log(ctx: &Context, msg: &str) {
-    match ctx.http.get_current_application_info().await {
-        Ok(info) => match info.owner.create_dm_channel(ctx).await {
+pub async fn log(ctx: &Context, msg: impl Display + AsRef<[u8]>) {
+    match BotInfo::get() {
+        Some(info) => match info.owner.create_dm_channel(ctx).await {
             Ok(channel) => {
-                if let Err(err) = channel.say(ctx, msg).await {
-                    println!(
-                        "Couldn't DM the owner when trying to log: {}\nLog: {}",
+                if let Err(err) = channel.say(ctx, &msg).await {
+                    print_and_write(format!(
+                        "Couldn't DM the owner when trying to log: {}\nMessage: {}",
                         err, msg
-                    );
+                    ));
                 }
             }
-            Err(err) => println!(
-                "Couldn't get the DM channel with the owner when trying to log: {}\nLog: {}",
+            Err(err) => print_and_write(format!(
+                "Couldn't get the DM channel with the owner when trying to log: {}\nMessage: {}",
                 err, msg
-            ),
+            )),
         },
-        Err(err) => println!(
-            "Couldn't get the application info when trying to log: {}\nLog: {}",
-            err, msg
-        ),
+        None => print_and_write(format!(
+            "Couldn't get BotInfo when trying to log\nMessage: {}",
+            msg
+        )),
+    };
+}
+
+fn print_and_write(msg: impl Display) {
+    let print_and_write = format!(
+        "{}: {}\n\n",
+        chrono::Utc::now().format("%e %B %A %H:%M:%S"),
+        msg
+    );
+    println!("{}", print_and_write);
+
+    match std::fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open("couldnt_dm.txt")
+    {
+        Ok(mut file) => {
+            if let Err(err) = file.write(print_and_write.as_bytes()) {
+                println!("Couldn't write to the log file: {}", err)
+            }
+        }
+        Err(err) => println!("Couldn't open the log file: {}", err),
     }
 }

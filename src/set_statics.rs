@@ -1,6 +1,6 @@
 use once_cell::sync::OnceCell;
 use serde::Deserialize;
-use serenity::{http::client::Http, model::id::UserId};
+use serenity::{http::client::Http, model::id::UserId, utils::Colour};
 use std::{fs, io};
 
 const DEFAULT_CONFIG: &'static str =
@@ -8,10 +8,10 @@ const DEFAULT_CONFIG: &'static str =
 token = \"TOKEN HERE\"
 
 # The invite link for the bot: https://discordpy.readthedocs.io/en/latest/discord.html#inviting-your-bot
-invite = \"https://discord.com/api/oauth2/ THE REST OF THE LINK HERE\"
+invite = \"https://discord.com/api/oauth2/THE REST OF THE LINK HERE\"
 
 # The link of the bot's repo's GitHub's page
-github = \"https://github.com/ USER NAME HERE/REPO NAME HERE\"";
+github = \"https://github.com/USER NAME HERE/REPO NAME HERE\"";
 
 #[derive(Deserialize)]
 pub struct BotConfig {
@@ -49,9 +49,11 @@ impl BotConfig {
 }
 
 pub struct BotInfo {
-    pub owner_id: UserId,
-    pub bot_id: UserId,
+    pub owner: UserId,
+    pub user: UserId,
     description: String,
+    pub colour: Colour,
+    pub error_colour: Colour,
 }
 
 static BOT_INFO: OnceCell<BotInfo> = OnceCell::new();
@@ -64,9 +66,11 @@ impl BotInfo {
             .expect("Couldn't access application info:");
 
         let info = BotInfo {
-            owner_id: app_info.owner.id,
-            bot_id: app_info.id,
+            owner: app_info.owner.id,
+            user: app_info.id,
             description: app_info.description,
+            colour: Colour::new(15702682),
+            error_colour: Colour::new(11534368),
         };
 
         BOT_INFO

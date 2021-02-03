@@ -1,10 +1,9 @@
-use std::borrow::Cow;
-
 use super::{
     set_statics::BotConfig,
     utils::{log, send_embed},
 };
 use serenity::{
+    builder::CreateEmbed,
     client::Context,
     framework::standard::{
         macros::{command, group},
@@ -24,48 +23,41 @@ struct General;
 #[description = "How you can add me to your server, contact my owner, my GitHub page etc."]
 #[aliases("about", "invite", "inv")]
 async fn cmd_info(ctx: &Context, msg: &Message) -> CommandResult {
-    let (description, owner, is_error) = match ctx.http.get_current_application_info().await {
-        Ok(info) => (
-            Cow::from(info.description),
-            info.owner.id.mention().to_string().into(),
-            false,
-        ),
+    let mut embed = CreateEmbed::default();
+    let mut is_error = false;
+    match ctx.http.get_current_application_info().await {
+        Ok(info) => {
+            embed
+                .description(info.description)
+                .field("Made by:", info.owner.id.mention(), true);
+        }
         Err(err) => {
             log(
                 ctx,
-                &format!(
+                format!(
                     "Couln't get the application info for the `info` command: {}",
                     err
                 ),
             )
             .await;
-            (
-                "Awkward but I think I forgot who I am..".into(),
-                "Oh, I forgot my creator too.. Sorry creator..".into(),
-                true,
-            )
+            embed.description("Awkward but I think I forgot who I am..");
+            is_error = true
         }
     };
-    let (title, invite, github) = match BotConfig::get() {
-        Some(config) => (
-            "Want me in your server? Click here then!",
-            Some(&config.invite),
-            Cow::from(&config.github),
-        ),
+
+    match BotConfig::get() {
+        Some(config) => {
+            embed
+                .title("Want me in your server? Click here then!")
+                .url(&config.invite)
+                .field("on GitHub:", &config.github, true);
+        }
         None => {
             log(ctx, "Couldn't get Config for the `info` command").await;
-            (
-                "Oops, I lost my invite, I swear I had it right here",
-                None,
-                "I forgot my GitHub page too..".into(),
-            )
+            embed.title("Oops, I lost my invite, I swear I had it right here");
+            is_error = true
         }
     };
-    let fields = Some(vec![
-        ("Made by:", owner, true),
-        ("On GitHub:", github, true),
-    ]);
-    send_embed(ctx, msg, is_error, description, title, fields, invite).await;
-
+    send_embed(ctx, msg, is_error, embed).await;
     Ok(())
 }
