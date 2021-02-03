@@ -1,18 +1,20 @@
-use std::borrow::Cow;
-
-use crate::send_embed;
+use super::utils::send_embed;
 use serenity::{
     client::Context,
     framework::standard::{macros::hook, DispatchError, Reason},
     model::channel::Message,
 };
+use std::borrow::Cow;
 
 #[hook]
 pub async fn handle(ctx: &Context, msg: &Message, error: DispatchError) {
     let info = match &error {
         DispatchError::CheckFailed(info, reason) => {
             if let Reason::User(reason) = reason {
-                Some(Cow::from(format!("Seems like you don't pass the check.. {}\n{}", reason, info)))
+                Some(Cow::from(format!(
+                    "Seems like you don't pass the check.. {}\n{}",
+                    reason, info
+                )))
             } else {
                 Some(format!("Seems like you don't pass the check.. {}", info).into())
             }
@@ -34,16 +36,18 @@ pub async fn handle(ctx: &Context, msg: &Message, error: DispatchError) {
         DispatchError::BlockedUser => {
             Some("Oops, you're blocked to use this command for some reason..".into())
         }
-        DispatchError::BlockedGuild => {
-            Some("Oops, the guild or its owner is blocked to use this command for some reason..".into())
-        }
+        DispatchError::BlockedGuild => Some(
+            "Oops, the guild or its owner is blocked to use this command for some reason..".into(),
+        ),
         DispatchError::BlockedChannel => {
             Some("Oops, the channel is blocked to use this command for some reason..".into())
         }
         DispatchError::OnlyForDM => Some("You can only use this command in my DMs 😳".into()),
         DispatchError::OnlyForGuilds => Some("You can only use this command in a guild".into()),
         DispatchError::OnlyForOwners => Some("This command is dedicated to my master".into()),
-        DispatchError::LackingRole => Some("You don't have the roles required for this command..".into()),
+        DispatchError::LackingRole => {
+            Some("You don't have the roles required for this command..".into())
+        }
         DispatchError::LackingPermissions(perms) => Some(
             format!(
                 "You need these permissions to run this command and you don't have them 😤:\n{}",

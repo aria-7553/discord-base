@@ -1,6 +1,9 @@
 use std::borrow::Cow;
 
-use crate::{set_statics::BotConfig, log, send_embed};
+use super::{
+    set_statics::BotConfig,
+    utils::{log, send_embed},
+};
 use serenity::{
     client::Context,
     framework::standard::{

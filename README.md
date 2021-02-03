@@ -1,30 +1,24 @@
 # discord-base
-The repo I clone and build my bots on top of, made using [Serenity](https://github.com/serenity-rs/serenity) in Rust!  
-Yes, this could be a crate but I find it more convenient this way and I do realise no one else is going to use this
+The repo for the crate I use to build my bots on top of, made using [Serenity](https://github.com/serenity-rs/serenity) in Rust!  
 
 ## Set up?
-Just clone this repo, and in your terminal `cd` into the folder with `Cargo.toml`, and run it with `cargo run` (Yes that's it, it'll guide you through the rest!)
+IDK myself yet..
 It uses the owner and description in [the application page](https://discord.com/developers/applications)
-Then you code on top of it of course
+And you can only use `start()` and `utils::log()` and `utils::send_embed()`
 
 ## Customise it? You can:
 - Obviously edit the config file
-- Rename the folder and edit `Cargo.toml` however you want (don't touch the dependencies though)
-- Change the path or name of the config file at `Config::set(path: &str)` in `main.rs`
-- Change the default config that's written at `DEFAULT_CONFIG` in `config_parser.rs`
-- Change the prefix etc. in the `framework` variable in `main.rs`
-- Generally edit any string ever used by the program by just searching for it and editing it
-- Or search for `colour` to change them (It's decimal if it's a weird number)
-- And just do whatever else you want, of course make sure to test it though
+- Change the path or name of the config file at `start(path: &str)`
+- It isn't very customisable yet, probably going to implement it later
 
-## What it can do (for now)
+## What it can do
 - Print and DM the owner when it's ready
-- `log()` to DM the owner and `send_embed()` to send a message with an embed
-- Informs the commander (if available) and owner on an unexpected error
+- `utils::log()` to DM the owner and `utils::send_embed()` to send a message with an embed
+- Informs the commander (if available) and owner on an unexpected error if using `send_embed`
 - A nice help command with aliases `commands, cmds`, listing all the other commands and their groups
 - Give more information about a command with `help [command name]`
 - Suggest similar commands if `[command name]` is.. well.. similar to another command
-- A WIP `info` command with aliases `about, invite` that gets the desciption from [the application page](https://discord.com/developers/applications)
+- An `info` command with aliases `about, invite` that gets the desciption and owner from [the application page](https://discord.com/developers/applications) and the GitHub page from the config file
 
 ## To do list:
 - Making `help` and `info` run only if the bot is mentioned (no prefix)
