@@ -25,8 +25,8 @@ pub async fn send_embed<T: Display, U: Display, F: Display, S: Display, D: Displ
                     e.url(url);
                 };
                 e.colour(match is_error {
-                    true => Colour::new(15037299),
-                    false => Colour::new(8505220),
+                    true => Colour::new(11534368),
+                    false => Colour::new(15702682),
                 })
                 .description(&description)
                 .title(&title)

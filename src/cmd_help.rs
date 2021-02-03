@@ -26,8 +26,8 @@ use std::collections::HashSet;
 #[lacking_ownership = "Hide"]
 #[lacking_conditions = "Hide"]
 #[wrong_channel = "Strike"]
-#[embed_error_colour = "#E57373"]
-#[embed_success_colour = "#81C784"]
+#[embed_error_colour = "#B00020"]
+#[embed_success_colour = "#EF9A9A"]
 #[max_levenshtein_distance(3)]
 #[indention_prefix = "♡"]
 async fn cmd_help(
