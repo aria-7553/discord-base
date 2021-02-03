@@ -9,19 +9,19 @@ And you can only use `start()` and `utils::log()` and `utils::send_embed()`
 ## Customise it? You can:
 - Obviously edit the config file
 - Change the path or name of the config file at `start(path: &str)`
-- It isn't very customisable yet, probably going to implement it later
+- It isn't very customisable because it's for my personal use, you can just edit the code though
 
 ## What it can do
-- Print and DM the owner when it's ready
 - `utils::log()` to DM the owner and `utils::send_embed()` to send a message with an embed
-- Informs the commander (if available) and owner on an unexpected error if using `send_embed`
+- Informs the commander and maybe owner on an error if using `send_embed()`
+- Prints and logs to a file if `log()` failed
+- An `info` command with aliases `about, invite` that gets the desciption and owner from [the application page](https://discord.com/developers/applications) and the GitHub page from the config file
+- *And these from Serenity's StandardFramework:*
 - A nice help command with aliases `commands, cmds`, listing all the other commands and their groups
 - Give more information about a command with `help [command name]`
-- Suggest similar commands if `[command name]` is.. well.. similar to another command
-- An `info` command with aliases `about, invite` that gets the desciption and owner from [the application page](https://discord.com/developers/applications) and the GitHub page from the config file
+- Suggest similar commands if `help [command name]` is.. well.. similar to another command
 
 ## What it will be able to do (soon™)
-- Logging into a file
 - Making `help` and `info` run only if the bot is mentioned (no prefix)
 - Setting the bot's activity status to `Listening to @mention help`
 - Guild specific prefixes (a `prefix` command)
