@@ -20,7 +20,8 @@ And you can only use `start()` and `utils::log()` and `utils::send_embed()`
 - Suggest similar commands if `[command name]` is.. well.. similar to another command
 - An `info` command with aliases `about, invite` that gets the desciption and owner from [the application page](https://discord.com/developers/applications) and the GitHub page from the config file
 
-## To do list:
+## What it will be able to do (soon™)
+- Logging into a file
 - Making `help` and `info` run only if the bot is mentioned (no prefix)
 - Setting the bot's activity status to `Listening to @mention help`
 - Guild specific prefixes (a `prefix` command)

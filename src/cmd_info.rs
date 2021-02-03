@@ -24,11 +24,11 @@ struct General;
 #[description = "How you can add me to your server, contact my owner, my GitHub page etc."]
 #[aliases("about", "invite", "inv")]
 async fn cmd_info(ctx: &Context, msg: &Message) -> CommandResult {
-    let (description, owner, colour) = match ctx.http.get_current_application_info().await {
+    let (description, owner, is_error) = match ctx.http.get_current_application_info().await {
         Ok(info) => (
             Cow::from(info.description),
             info.owner.id.mention().to_string().into(),
-            8505220,
+            false,
         ),
         Err(err) => {
             log(
@@ -42,7 +42,7 @@ async fn cmd_info(ctx: &Context, msg: &Message) -> CommandResult {
             (
                 "Awkward but I think I forgot who I am..".into(),
                 "Oh, I forgot my creator too.. Sorry creator..".into(),
-                15037299,
+                true,
             )
         }
     };
@@ -65,7 +65,7 @@ async fn cmd_info(ctx: &Context, msg: &Message) -> CommandResult {
         ("Made by:", owner, true),
         ("On GitHub:", github, true),
     ]);
-    send_embed(ctx, msg, colour, description, title, fields, invite).await;
+    send_embed(ctx, msg, is_error, description, title, fields, invite).await;
 
     Ok(())
 }

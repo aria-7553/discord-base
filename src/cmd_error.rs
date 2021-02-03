@@ -75,7 +75,7 @@ pub async fn handle(ctx: &Context, msg: &Message, error: DispatchError) {
         send_embed(
             ctx,
             msg,
-            15037299,
+            true,
             info,
             "Ugh, something is wrong, I can feel it..",
             None::<Vec<(&str, &str, bool)>>,

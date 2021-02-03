@@ -8,7 +8,7 @@ use std::fmt::Display;
 pub async fn send_embed<T: Display, U: Display, F: Display, S: Display, D: Display>(
     ctx: &Context,
     reply: &Message,
-    colour: u32,
+    is_error: bool,
     description: T,
     title: U,
     fields: Option<Vec<(F, S, bool)>>,
@@ -24,9 +24,12 @@ pub async fn send_embed<T: Display, U: Display, F: Display, S: Display, D: Displ
                 if let Some(url) = url {
                     e.url(url);
                 };
-                e.colour(Colour::new(colour))
-                    .description(&description)
-                    .title(&title)
+                e.colour(match is_error {
+                    true => Colour::new(15037299),
+                    false => Colour::new(8505220),
+                })
+                .description(&description)
+                .title(&title)
             })
         })
         .await
