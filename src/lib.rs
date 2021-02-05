@@ -5,11 +5,7 @@ mod cmd_options;
 mod set_statics;
 mod utils;
 
-use serenity::{
-    client::{Context, EventHandler},
-    model::prelude::Ready,
-    Client,
-};
+use serenity::{Client, client::{Context, EventHandler}, model::prelude::{Activity, Ready}};
 use set_statics::{BotConfig, BotInfo};
 
 pub async fn start(config_path: &str) {
@@ -35,7 +31,9 @@ pub async fn start(config_path: &str) {
 pub struct Handler;
 #[serenity::async_trait]
 impl EventHandler for Handler {
-    async fn ready(&self, ctx: Context, _: Ready) {
+    async fn ready(&self, ctx: Context, info: Ready) {
+        ctx.set_activity(Activity::playing(format!("@{} help", info.user.name).as_str())).await;
+
         println!("Connected!");
         utils::log(&ctx, &String::from("Connected!")).await;
     }

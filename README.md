@@ -24,7 +24,6 @@ And you can only use `start()`, `utils::log()` and `utils::send_embed()`
 
 ## What it will be able to do (soon™)
 - Making `help` and `info` run only if the bot is mentioned (no prefix)
-- Setting the bot's activity status to `Listening to @mention help`
 - Guild specific prefixes (a `prefix` command)
 - Handling permissions
 - Localisation, different languages specific to guilds, channels, users (and letting others easily translate them)
