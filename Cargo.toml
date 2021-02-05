@@ -15,6 +15,10 @@ chrono = "0.4"
 version = "1.0"
 features = ["derive"]
 
+[dependencies.sqlx]
+version = "0.5"
+features = ["runtime-tokio-rustls", "postgres"]
+
 [dependencies.tokio]
 version = "1.1"
 features = ["rt-multi-thread"]
