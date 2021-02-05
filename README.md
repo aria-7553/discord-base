@@ -17,13 +17,12 @@ And you can only use `start()`, `utils::log()` and `utils::send_embed()`
 - Informs the commander and maybe owner on an error if using `send_embed()`
 - Calls `write_and_print()` if `log()` failed
 - An `info` command with aliases `about, invite` that gets the desciption and owner from [the application page](https://discord.com/developers/applications) and the GitHub page from the config file
-- *And these from Serenity's StandardFramework:*
+- *And these from Serenity's standard_framework:*
 - A nice help command with aliases `commands, cmds`, listing all the other commands and their groups
 - Give more information about a command with `help [command name]`
 - Suggest similar commands if `help [command name]` is.. well.. similar to another command
 
 ## What it will be able to do (soon™)
-- Making `help` and `info` run only if the bot is mentioned (no prefix)
 - Guild specific prefixes (a `prefix` command)
 - Handling permissions
 - Localisation, different languages specific to guilds, channels, users (and letting others easily translate them)

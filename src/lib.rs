@@ -15,7 +15,7 @@ pub async fn start(config_path: &str) {
     BotInfo::set(config.token()).await;
     let bot_info = BotInfo::get().expect("Couldn't access BOT_INFO to get the owner and bot ID");
 
-    let framework = cmd_options::get_framework(bot_info.user(), bot_info.owner(), config.prefix()).await;
+    let framework = cmd_options::get_framework(bot_info.user(), bot_info.owner()).await;
 
     let mut client = Client::builder(&config.token())
         .event_handler(Handler)

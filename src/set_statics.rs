@@ -7,9 +7,6 @@ const DEFAULT_CONFIG: &'static str =
     "# The token of the bot: https://discordpy.readthedocs.io/en/latest/discord.html#creating-a-bot-account
 token = \"TOKEN HERE\"
 
-# The prefix for your bot (help and info commands won't use this prefix):
-prefix = \".\"
-
 # The invite link for the bot: https://discordpy.readthedocs.io/en/latest/discord.html#inviting-your-bot
 invite = \"https://discord.com/api/oauth2/THE REST OF THE LINK HERE\"
 
@@ -22,7 +19,6 @@ colour = 11771355";
 #[derive(Deserialize)]
 pub(crate) struct BotConfig {
     token: String,
-    prefix: String,
     invite: String,
     github: String,
     colour: u32,
@@ -57,9 +53,6 @@ impl BotConfig {
 
     pub fn token(&self) -> &String {
         &self.token
-    }
-    pub fn prefix(&self) -> &String {
-        &self.prefix
     }
     pub fn invite(&self) -> &String {
         &self.invite
