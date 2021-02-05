@@ -1,6 +1,6 @@
 use once_cell::sync::OnceCell;
 use serde::Deserialize;
-use serenity::{http::client::Http, model::id::UserId, utils::Colour};
+use serenity::{http::client::Http, model::id::UserId};
 use std::{fs, io};
 
 const DEFAULT_CONFIG: &'static str =
@@ -20,18 +20,18 @@ github = \"https://github.com/USER NAME HERE/REPO NAME HERE\"
 colour = 11771355";
 
 #[derive(Deserialize)]
-pub struct BotConfig {
-    pub token: String,
-    pub prefix: String,
-    pub invite: String,
-    pub github: String,
-    pub colour: Colour,
+pub(crate) struct BotConfig {
+    token: String,
+    prefix: String,
+    invite: String,
+    github: String,
+    colour: u32,
 }
 
 static BOT_CONFIG: OnceCell<BotConfig> = OnceCell::new();
 
 impl BotConfig {
-    pub fn set(config_path: &str) {
+    pub(crate) fn set(config_path: &str) {
         let config: BotConfig =
             toml::from_str(&fs::read_to_string(config_path).unwrap_or_else(|err| {
                 if err.kind() == io::ErrorKind::NotFound {
@@ -54,19 +54,35 @@ impl BotConfig {
     pub fn get() -> Option<&'static BotConfig> {
         BOT_CONFIG.get()
     }
+
+    pub fn token(&self) -> &String {
+        &self.token
+    }
+    pub fn prefix(&self) -> &String {
+        &self.prefix
+    }
+    pub fn invite(&self) -> &String {
+        &self.invite
+    }
+    pub fn github(&self) -> &String {
+        &self.github
+    }
+    pub fn colour(&self) -> u32 {
+        self.colour
+    }
 }
 
-pub struct BotInfo {
-    pub owner: UserId,
-    pub user: UserId,
-    pub description: String,
-    pub error_colour: Colour,
+pub(crate) struct BotInfo {
+    owner: UserId,
+    user: UserId,
+    description: String,
+    error_colour: u32,
 }
 
 static BOT_INFO: OnceCell<BotInfo> = OnceCell::new();
 
 impl BotInfo {
-    pub async fn set(token: &str) {
+    pub(crate) async fn set(token: &str) {
         let app_info = Http::new_with_token(token)
             .get_current_application_info()
             .await
@@ -76,7 +92,7 @@ impl BotInfo {
             owner: app_info.owner.id,
             user: app_info.id,
             description: app_info.description,
-            error_colour: Colour::new(11534368),
+            error_colour: 11534368,
         };
 
         BOT_INFO
@@ -86,5 +102,18 @@ impl BotInfo {
 
     pub fn get() -> Option<&'static BotInfo> {
         BOT_INFO.get()
+    }
+
+    pub fn owner(&self) -> UserId {
+        self.owner
+    }
+    pub fn user(&self) -> UserId {
+        self.user
+    }
+    pub fn description(&self) -> &String {
+        &self.description
+    }
+    pub fn error_colour(&self) -> u32 {
+        self.error_colour
     }
 }

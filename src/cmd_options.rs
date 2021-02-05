@@ -4,7 +4,7 @@ use serenity::{
     model::id::UserId,
 };
 
-pub async fn get_framework(bot_id: UserId, owner_id: UserId, prefix: &'static str) -> StandardFramework {
+pub async fn get_framework(bot_id: UserId, owner_id: UserId, prefix: &str) -> StandardFramework {
     StandardFramework::new()
         .configure(|c| {
             c.prefix(prefix)

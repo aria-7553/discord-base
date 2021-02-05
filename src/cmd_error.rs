@@ -7,7 +7,7 @@ use serenity::{
 };
 
 #[hook]
-pub async fn handle(ctx: &Context, msg: &Message, error: DispatchError) {
+pub(crate) async fn handle(ctx: &Context, msg: &Message, error: DispatchError) {
     if let DispatchError::Ratelimited(info) = &error {
         if !info.is_first_try {
             return;
@@ -69,7 +69,7 @@ pub async fn handle(ctx: &Context, msg: &Message, error: DispatchError) {
 }
 
 #[hook]
-pub async fn delay_action(ctx: &Context, msg: &Message) {
+pub(crate) async fn delay_action(ctx: &Context, msg: &Message) {
     if let Err(err) = msg.react(ctx, '😤').await {
         let mut embed = CreateEmbed::default();
         embed.title("I was going to react with 😤 to show my frustration of you being so impatient, but I couldn't so I'm even more frustrated now 😤")

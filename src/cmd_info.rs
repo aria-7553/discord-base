@@ -1,9 +1,8 @@
-use crate::set_statics::BotInfo;
-
 use super::{
     set_statics::BotConfig,
     utils::{log, send_embed},
 };
+use crate::set_statics::BotInfo;
 use serenity::{
     builder::CreateEmbed,
     client::Context,
@@ -30,8 +29,8 @@ async fn cmd_info(ctx: &Context, msg: &Message) -> CommandResult {
     match BotInfo::get() {
         Some(info) => {
             embed
-                .description(&info.description)
-                .field("Made by:", info.owner.mention(), true);
+                .description(&info.description())
+                .field("Made by:", info.owner().mention(), true);
         }
         None => {
             log(ctx, "Couln't get BotInfo for the `info` command").await;
@@ -44,8 +43,8 @@ async fn cmd_info(ctx: &Context, msg: &Message) -> CommandResult {
         Some(config) => {
             embed
                 .title("Want me in your server? Click here then!")
-                .url(&config.invite)
-                .field("on GitHub:", &config.github, true);
+                .url(&config.invite())
+                .field("on GitHub:", &config.github(), true);
         }
         None => {
             log(ctx, "Couldn't get BotConfig for the `info` command").await;

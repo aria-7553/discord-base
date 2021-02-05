@@ -12,14 +12,14 @@ pub async fn send_embed(ctx: &Context, reply: &Message, is_error: bool, mut embe
     if is_error {
         match BotInfo::get() {
             Some(info) => {
-                embed.colour(info.error_colour);
+                embed.colour(info.error_colour());
             }
             None => log(ctx, "Couldn't get BotInfo to get error_colour").await,
         }
     } else {
         match BotConfig::get() {
             Some(config) => {
-                embed.colour(config.colour);
+                embed.colour(config.colour());
             }
             None => log(ctx, "Couldn't get BotConfig to get colour").await,
         }
@@ -62,7 +62,7 @@ pub async fn send_embed(ctx: &Context, reply: &Message, is_error: bool, mut embe
 
 pub async fn log(ctx: &Context, msg: impl Display + AsRef<[u8]>) {
     match BotInfo::get() {
-        Some(info) => match info.owner.create_dm_channel(ctx).await {
+        Some(info) => match info.owner().create_dm_channel(ctx).await {
             Ok(channel) => {
                 if let Err(err) = channel.say(ctx, &msg).await {
                     print_and_write(format!(
