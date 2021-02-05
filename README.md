@@ -12,18 +12,18 @@ The repo for the crate I use to build my bots on top of, made using [Serenity](h
 Does everything to start up the bot
 or creates the default config file if it's not there, then you should edit that file
 Use it as the first thing in your `#[tokio::main]` function
-```rs
+```rust
 start("config.toml", 5432).await;
 ```
 #### `utils::log(ctx: &Context, msg: impl Display + AsRef<[u8]>)`
 DMs the owner the message
 Reverts to `print_and_write()` if it failed, also telling why it failed
-```rs
+```rust
 utils::log(ctx, "Heya owner! How are you?").await;
 ```
 #### `utils::print_and_write(msg: impl Display)`
 Prints the message and when it was called and writes them to a file called "couldnt_dm.txt"
-```rs
+```rust
 utils::print_and_write("Magic text appearing in the text file");
 /* The file couldnt_dm.txt is now created and has these in it:
 5 February Friday 10:38:20: Magic text appearing in the text file
@@ -43,7 +43,7 @@ Sends the embed to the channel reply is in, colours it with the colour you gave 
 Unless `is_error` is `true` then it's the error colour *(That's all that parameter does)*
 If it's failed to send though, tries to tell why in the server in plain text
 or DMs the reply's sender if that also fails
-```rs
+```rust
 let mut embed = CreateEmbed::default();
 embed.title("This is my title");
 utils::send_embed(ctx, msg, true, embed).await;
