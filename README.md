@@ -8,20 +8,20 @@ The repo for the crate I use to build my bots on top of, made using [Serenity](h
 - Then check usage right under here
 
 ## Usage
-### `start(config_path: &str, postgresql_port: u16)`
+#### `start(config_path: &str, postgresql_port: u16)`
 Does everything to start up the bot
 or creates the default config file if it's not there, then you should edit that file
 Use it as the first thing in your `#[tokio::main]` function
 ```rs
 start("config.toml", 5432).await;
 ```
-### `utils::log(ctx: &Context, msg: impl Display + AsRef<[u8]>)`
+#### `utils::log(ctx: &Context, msg: impl Display + AsRef<[u8]>)`
 DMs the owner the message
 Reverts to `print_and_write()` if it failed, also telling why it failed
 ```rs
 utils::log(ctx, "Heya owner! How are you?").await;
 ```
-### `utils::print_and_write(msg: impl Display)`
+#### `utils::print_and_write(msg: impl Display)`
 Prints the message and when it was called and writes them to a file called "couldnt_dm.txt"
 ```rs
 utils::print_and_write("Magic text appearing in the text file");
@@ -38,7 +38,7 @@ utils::print_and_write("And even more text here");
 
 */
 ```
-### `utils::send_embed(ctx: &Context, reply: &Message, is_error: bool, mut embed: CreateEmbed)`
+#### `utils::send_embed(ctx: &Context, reply: &Message, is_error: bool, mut embed: CreateEmbed)`
 Sends the embed to the channel reply is in, colours it with the colour you gave in your config file
 Unless `is_error` is `true` then it's the error colour *(That's all that parameter does)*
 If it's failed to send though, tries to tell why in the server in plain text
@@ -50,11 +50,12 @@ utils::send_embed(ctx, msg, true, embed).await;
 ```
 
 ## What else it does
-*All these don't have a prefix so they're run with @bot help, you set your own prefix for the groups you create (I made it this way because usually only these commands collide with other bots so you can use convenient prefixes for your commands)*
+*All these don't have a prefix so they're run with `@bot help`, you set your own prefix for the groups you create (I made it this way because usually only these commands collide with other bots so you can use convenient prefixes for your commands)*
 - Sets the presence to `Playing a game: @BOT'S USERNAME HERE help` (This looks much better than other presences Discord allows)
-- An `info` command with aliases `about, invite, inv` that gets the desciption and owner from [the application page](https://discord.com/developers/applications) and the GitHub page from the config file
+- An `info` command with aliases `about, invite, inv` that gets the desciption and owner from [the application page](https://discord.com/developers/applications) and the GitHub page from the config file  
+
 *And these from Serenity's standard_framework:*
-- A nice help command with aliases `commands, cmds`, listing all the other commands and their groups
+- A nice help command with aliases `commands, cmds` for listing all the other commands and their groups
 - Give more information about a command with `help [command name]`
 - Suggest similar commands if `help [command name]` is.. well.. similar to another command
 
