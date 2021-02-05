@@ -7,17 +7,25 @@ const DEFAULT_CONFIG: &'static str =
     "# The token of the bot: https://discordpy.readthedocs.io/en/latest/discord.html#creating-a-bot-account
 token = \"TOKEN HERE\"
 
+# The prefix for your bot (help and info commands won't use this prefix):
+prefix = \".\"
+
 # The invite link for the bot: https://discordpy.readthedocs.io/en/latest/discord.html#inviting-your-bot
 invite = \"https://discord.com/api/oauth2/THE REST OF THE LINK HERE\"
 
 # The link of the bot's repo's GitHub's page
-github = \"https://github.com/USER NAME HERE/REPO NAME HERE\"";
+github = \"https://github.com/USER NAME HERE/REPO NAME HERE\"
+
+# The colour utils::send_embed() will use if is_error is false: https://www.checkyourmath.com/convert/color/rgb_decimal.php
+colour = 11771355";
 
 #[derive(Deserialize)]
 pub struct BotConfig {
     pub token: String,
+    pub prefix: String,
     pub invite: String,
     pub github: String,
+    pub colour: Colour,
 }
 
 static BOT_CONFIG: OnceCell<BotConfig> = OnceCell::new();
@@ -51,8 +59,7 @@ impl BotConfig {
 pub struct BotInfo {
     pub owner: UserId,
     pub user: UserId,
-    description: String,
-    pub colour: Colour,
+    pub description: String,
     pub error_colour: Colour,
 }
 
@@ -69,7 +76,6 @@ impl BotInfo {
             owner: app_info.owner.id,
             user: app_info.id,
             description: app_info.description,
-            colour: Colour::new(15702682),
             error_colour: Colour::new(11534368),
         };
 

@@ -4,10 +4,10 @@ use serenity::{
     model::id::UserId,
 };
 
-pub async fn get_framework(bot_id: UserId, owner_id: UserId) -> StandardFramework {
+pub async fn get_framework(bot_id: UserId, owner_id: UserId, prefix: &'static str) -> StandardFramework {
     StandardFramework::new()
         .configure(|c| {
-            c.prefix(".")
+            c.prefix(prefix)
                 .no_dm_prefix(true)
                 .case_insensitivity(true)
                 .on_mention(Some(bot_id))

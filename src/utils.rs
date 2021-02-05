@@ -1,4 +1,4 @@
-use crate::set_statics::BotInfo;
+use crate::set_statics::{BotConfig, BotInfo};
 use serenity::{
     builder::CreateEmbed,
     client::Context,
@@ -9,12 +9,20 @@ use std::{fmt::Display, io::Write};
 
 pub async fn send_embed(ctx: &Context, reply: &Message, is_error: bool, mut embed: CreateEmbed) {
     let channel = reply.channel_id;
-    let info = BotInfo::get();
-    if let Some(info) = info {
-        embed.colour(match is_error {
-            true => info.colour,
-            false => info.error_colour,
-        });
+    if is_error {
+        match BotInfo::get() {
+            Some(info) => {
+                embed.colour(info.error_colour);
+            }
+            None => log(ctx, "Couldn't get BotInfo to get error_colour").await,
+        }
+    } else {
+        match BotConfig::get() {
+            Some(config) => {
+                embed.colour(config.colour);
+            }
+            None => log(ctx, "Couldn't get BotConfig to get colour").await,
+        }
     }
 
     if let Err(err) = channel.send_message(ctx, |m| m.set_embed(embed)).await {
@@ -75,7 +83,7 @@ pub async fn log(ctx: &Context, msg: impl Display + AsRef<[u8]>) {
     };
 }
 
-fn print_and_write(msg: impl Display) {
+pub fn print_and_write(msg: impl Display) {
     let print_and_write = format!(
         "{}: {}\n\n",
         chrono::Utc::now().format("%e %B %A %H:%M:%S"),

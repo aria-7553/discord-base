@@ -1,3 +1,5 @@
+use crate::set_statics::BotInfo;
+
 use super::{
     set_statics::BotConfig,
     utils::{log, send_embed},
@@ -25,21 +27,14 @@ struct General;
 async fn cmd_info(ctx: &Context, msg: &Message) -> CommandResult {
     let mut embed = CreateEmbed::default();
     let mut is_error = false;
-    match ctx.http.get_current_application_info().await {
-        Ok(info) => {
+    match BotInfo::get() {
+        Some(info) => {
             embed
-                .description(info.description)
-                .field("Made by:", info.owner.id.mention(), true);
+                .description(&info.description)
+                .field("Made by:", info.owner.mention(), true);
         }
-        Err(err) => {
-            log(
-                ctx,
-                format!(
-                    "Couln't get the application info for the `info` command: {}",
-                    err
-                ),
-            )
-            .await;
+        None => {
+            log(ctx, "Couln't get BotInfo for the `info` command").await;
             embed.description("Awkward but I think I forgot who I am..");
             is_error = true
         }
@@ -53,7 +48,7 @@ async fn cmd_info(ctx: &Context, msg: &Message) -> CommandResult {
                 .field("on GitHub:", &config.github, true);
         }
         None => {
-            log(ctx, "Couldn't get Config for the `info` command").await;
+            log(ctx, "Couldn't get BotConfig for the `info` command").await;
             embed.title("Oops, I lost my invite, I swear I had it right here");
             is_error = true
         }
