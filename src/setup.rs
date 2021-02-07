@@ -39,12 +39,14 @@ pub async fn start(config_path: &str) {
 
     let db = set_db().await;
 
-    let framework = set_framework(&db, bot_info.user(), bot_info.owner()).await;
-
-    let mut client = Client::builder(&config.token())
+    let client_builder = Client::builder(&config.token())
         .event_handler(Handler)
+        .type_map_insert::<SqlitePoolKey>(db);
+
+    let framework = set_framework(bot_info.user(), bot_info.owner()).await;
+
+    let mut client = client_builder
         .framework(framework)
-        .type_map_insert::<SqlitePoolKey>(db)
         .await
         .expect("Couldn't create the client");
 
@@ -176,10 +178,19 @@ async fn set_db() -> SqlitePool {
     db
 }
 
-async fn prefix_check(db: &SqlitePool, ctx: &Context, msg: &Message) -> Option<String> {
+async fn prefix_check(ctx: &Context, msg: &Message) -> Option<String> {
     let data = ctx.data.read().await;
+    let db = data.get::<SqlitePoolKey>();
+    let guild_id = msg.guild_id;
 
-    if let Some(guild_id) = msg.guild_id {
+    if let None = db {
+        return None;
+    }
+    if let None = guild_id {
+        return None;
+    }
+
+    if let (Some(db), Some(guild_id)) = (db, guild_id) {
         let guild_id_int = guild_id.0 as i64;
         match query!(
             "SELECT prefix FROM prefixes WHERE guild_id = ?",
@@ -209,7 +220,7 @@ async fn prefix_check(db: &SqlitePool, ctx: &Context, msg: &Message) -> Option<S
     }
 }
 
-async fn set_framework(db: &SqlitePool, bot_id: UserId, owner_id: UserId) -> StandardFramework {
+async fn set_framework(bot_id: UserId, owner_id: UserId) -> StandardFramework {
     StandardFramework::new()
         .configure(|c| {
             c.prefix("")
@@ -217,7 +228,7 @@ async fn set_framework(db: &SqlitePool, bot_id: UserId, owner_id: UserId) -> Sta
                 .case_insensitivity(true)
                 .on_mention(Some(bot_id))
                 .owners(vec![owner_id].into_iter().collect())
-                .dynamic_prefix(|ctx, msg| Box::pin(prefix_check(db, ctx, msg)))
+                .dynamic_prefix(|ctx, msg| Box::pin(prefix_check(ctx, msg)))
         })
         .on_dispatch_error(command_error::handle)
         .bucket("general", |b| {

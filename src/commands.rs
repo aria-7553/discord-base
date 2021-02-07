@@ -97,6 +97,7 @@ async fn cmd_info(ctx: &Context, msg: &Message) -> CommandResult {
 }
 
 #[command("prefix")]
+#[aliases("setprefix", "set_prefix", "set-prefix", "changeprefix", "change_prefix", "change-prefix")]
 #[num_args(1)]
 #[required_permissions("MANAGE_GUILD")]
 #[only_in("guilds")]

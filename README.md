@@ -1,11 +1,9 @@
-### You probably don't want this! This branch is for WIP code that doesn't compile. Use the [main branch](https://github.com/aria-7553/discord-base/tree/master) instead.
-
 # discord-base
 The repo for the crate I use to build my bots on top of, made using [Serenity](https://github.com/serenity-rs/serenity) in Rust!  
 
 ## Set up?
 - IDK myself yet..
-- It uses the owner and description in [the application page](https://discord.com/developers/applications) so edit them
+- Go to [the application page](https://discord.com/developers/applications), select your bot and set the description. The `info` command will use that and the account that has that application
 - Then check usage right under here
 
 ## Usage
@@ -15,17 +13,17 @@ or creates the default config file if it's not there, then you should edit that 
 Use it as the first thing in your `#[tokio::main]` function
 ```rust
 use discord_base::start;
-start("config.toml", 5432).await;
+start("config.toml").await;
 ```
 #### `log(ctx: &Context, msg: impl Display + AsRef<[u8]>)`
 DMs the owner the message
 Reverts to `print_and_write()` if it failed, also telling why it failed
 ```rust
 use discord_base::log;
-log(ctx, "Heya owner! How are you?").await;
+log(&ctx, "Heya owner! How are you?").await;
 ```
 #### `print_and_write(msg: impl Display)`
-Prints the message and when it was called and writes them to a file called "couldnt_dm.txt"
+Prints the message and the current time in UTC and writes the same to a file called "couldnt_dm.txt"
 ```rust
 use discord_base::print_and_write;
 print_and_write("Magic text appearing in the text file");
@@ -45,7 +43,7 @@ print_and_write("And even more text here");
 #### `utils::send_embed(ctx: &Context, reply: &Message, is_error: bool, mut embed: CreateEmbed)`
 Sends the embed to the channel reply is in, colours it with the colour you gave in your config file
 Unless `is_error` is `true` then it's the error colour *(That's all that parameter does)*
-If it's failed to send though, tries to tell why in the server in plain text
+If it's failed to send though, tries to tell why in the server in plain text (without embeds)
 or DMs the reply's sender if that also fails
 ```rust
 use discord_base::send_embed;
@@ -55,17 +53,18 @@ utils::send_embed(ctx, msg, true, embed).await;
 ```
 
 ## What else it does
-*All these don't have a prefix so they're run with @bot help, you set your own prefix for the groups you create (I made it this way because usually only these commands collide with other bots so you can use convenient prefixes for your own commands)*
+###### *All these don't have a prefix so they're run with `@bot [command]`. You set your own prefix for the groups you create*  
+*(I made it this way because usually only these commands collide with other bots so you can use convenient prefixes for your own commands)*
 - Sets the presence to `Playing a game: @BOT'S USERNAME HERE help` (This looks much better than other presences Discord allows)
-- An `info` command with aliases `about, invite, inv` that gets the desciption and owner from [the application page](https://discord.com/developers/applications) and the GitHub page from the config file
+- An `info` command that gets the desciption and owner from [the application page](https://discord.com/developers/applications) and the GitHub page from the config file
+- A `prefix` command that sets the prefix for the guild, which works for every command in addition to `@bot` and the prefixes you set for your groups
 
 *And these from Serenity's standard_framework:*
 - A nice help command with aliases `commands, cmds`, listing all the other commands and their groups
-- Give more information about a command with `help [command name]`
-- Suggest similar commands if `help [command name]` is.. well.. similar to another command
+- Give more information about a command with `help [command]`
+- Suggest similar commands if `help [command]` is.. well.. similar to another command
 
 ## What it will be able to do (soon™)
-- Guild specific prefixes (a `prefix` command)
 - Showing the current prefix with the help command
 - Handling permissions
 - Localisation, different languages specific to guilds, channels, users (and letting others easily translate them)
