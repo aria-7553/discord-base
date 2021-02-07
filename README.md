@@ -53,7 +53,7 @@ utils::send_embed(ctx, msg, true, embed).await;
 ```
 
 ## What else it does
-###### *All these don't have a prefix so they're run with `@bot [command]`. You set your own prefix for the groups you create*  
+##### *All these don't have a prefix so they're run with `@bot [command]`. You set your own prefix for the groups you create*  
 *(I made it this way because usually only these commands collide with other bots so you can use convenient prefixes for your own commands)*
 - Sets the presence to `Playing a game: @BOT'S USERNAME HERE help` (This looks much better than other presences Discord allows)
 - An `info` command that gets the desciption and owner from [the application page](https://discord.com/developers/applications) and the GitHub page from the config file
