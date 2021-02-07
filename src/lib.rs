@@ -1,40 +1,122 @@
-mod cmd_error;
-mod cmd_help;
-mod cmd_info;
-mod cmd_options;
-mod set_statics;
-mod utils;
+mod command_error;
+mod commands;
+pub mod setup;
 
-use serenity::{Client, client::{Context, EventHandler}, model::prelude::{Activity, Ready}};
-use set_statics::{BotConfig, BotInfo};
-
-pub async fn start(config_path: &str) {
-    BotConfig::set(config_path);
-    let config = BotConfig::get().expect("Couldn't access BOT_CONFIG to get the token");
-
-    BotInfo::set(config.token()).await;
-    let bot_info = BotInfo::get().expect("Couldn't access BOT_INFO to get the owner and bot ID");
-
-    let framework = cmd_options::get_framework(bot_info.user(), bot_info.owner()).await;
-
-    let mut client = Client::builder(&config.token())
-        .event_handler(Handler)
-        .framework(framework)
-        .await
-        .expect("Couldn't create the client");
-
-    if let Err(e) = client.start_autosharded().await {
-        utils::print_and_write(format!("Couldn't start the client: {}", e));
-    }
-}
+use serenity::{
+    builder::CreateEmbed,
+    client::{Context, EventHandler},
+    model::{channel::Message, id::GuildId, misc::Mentionable, prelude::Activity},
+};
+use setup::{BotConfig, BotInfo};
+use std::{fmt::Display, io::Write};
 
 pub struct Handler;
 #[serenity::async_trait]
 impl EventHandler for Handler {
-    async fn ready(&self, ctx: Context, info: Ready) {
-        ctx.set_activity(Activity::playing(format!("@{} help", info.user.name).as_str())).await;
+    async fn cache_ready(&self, ctx: Context, _: Vec<GuildId>) {
+        ctx.set_activity(Activity::playing(
+            format!(
+                "@{} help",
+                BotInfo::get().expect("Couldn't get BotInfo").name()
+            )
+            .as_str(),
+        ))
+        .await;
 
         println!("Connected!");
-        utils::log(&ctx, &String::from("Connected!")).await;
+        log(&ctx, &String::from("Connected!")).await;
+    }
+}
+
+pub async fn send_embed(ctx: &Context, reply: &Message, is_error: bool, mut embed: CreateEmbed) {
+    let channel = reply.channel_id;
+    if is_error {
+        embed.colour(11534368);
+    } else {
+        match BotConfig::get() {
+            Some(config) => {
+                embed.colour(config.colour());
+            }
+            None => log(ctx, "Couldn't get BotConfig to get colour").await,
+        };
+    };
+
+    if let Err(err) = channel.send_message(ctx, |m| m.set_embed(embed)).await {
+        if let Err(err) = channel
+            .say(ctx, format!("Oops, couldn't send the message 🤦‍♀️: {}", err))
+            .await
+        {
+            if let Err(err) = reply
+                .author
+                .dm(ctx, |m| {
+                    m.embed(|e| {
+                        e.colour(11534368)
+                            .description(format!(
+                                "{}\nLet the admins know so they can fix it\n",
+                                err
+                            ))
+                            .title(format!(
+                                "Looks like I can't send messages in {} :(",
+                                reply.channel_id.mention()
+                            ))
+                    })
+                })
+                .await
+            {
+                log(
+                    ctx,
+                    format!(
+                        "Couldn't even send the message to inform the commander: {}",
+                        err
+                    ),
+                )
+                .await
+            }
+        }
+    }
+}
+
+pub async fn log(ctx: &Context, msg: impl Display + AsRef<[u8]>) {
+    match BotInfo::get() {
+        Some(info) => match info.owner().create_dm_channel(ctx).await {
+            Ok(channel) => {
+                if let Err(err) = channel.say(ctx, &msg).await {
+                    print_and_write(format!(
+                        "Couldn't DM the owner when trying to log: {}\nMessage: {}",
+                        err, msg
+                    ));
+                }
+            }
+            Err(err) => print_and_write(format!(
+                "Couldn't get the DM channel with the owner when trying to log: {}\nMessage: {}",
+                err, msg
+            )),
+        },
+        None => print_and_write(format!(
+            "Couldn't get BotInfo when trying to log\nMessage: {}",
+            msg
+        )),
+    };
+}
+
+pub fn print_and_write(msg: impl Display) {
+    let print_and_write = format!(
+        "{}: {}\n\n",
+        chrono::Utc::now().format("%e %B %A %H:%M:%S"),
+        msg
+    );
+    println!("{}", print_and_write);
+
+    match std::fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open("couldnt_dm.txt")
+    {
+        Ok(mut file) => {
+            if let Err(err) = file.write(print_and_write.as_bytes()) {
+                println!("Couldn't write to the log file: {}", err)
+            }
+        }
+        Err(err) => println!("Couldn't open the log file: {}", err),
     }
 }
