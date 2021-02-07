@@ -40,7 +40,7 @@ print_and_write("And even more text here");
 
 */
 ```
-#### `utils::send_embed(ctx: &Context, reply: &Message, is_error: bool, mut embed: CreateEmbed)`
+#### `send_embed(ctx: &Context, reply: &Message, is_error: bool, mut embed: CreateEmbed)`
 Sends the embed to the channel reply is in, colours it with the colour you gave in your config file
 Unless `is_error` is `true` then it's the error colour *(That's all that parameter does)*
 If it's failed to send though, tries to tell why in the server in plain text (without embeds)
@@ -49,11 +49,11 @@ or DMs the reply's sender if that also fails
 use discord_base::send_embed;
 let mut embed = CreateEmbed::default();
 embed.title("This is my title");
-utils::send_embed(ctx, msg, true, embed).await;
+send_embed(ctx, msg, true, embed).await;
 ```
 
 ## What else it does
-##### *All these don't have a prefix so they're run with `@bot [command]`. You set your own prefix for the groups you create*  
+*All these don't have a prefix so they're run with `@bot [command]`. You set your own prefix for the groups you create*  
 *(I made it this way because usually only these commands collide with other bots so you can use convenient prefixes for your own commands)*
 - Sets the presence to `Playing a game: @BOT'S USERNAME HERE help` (This looks much better than other presences Discord allows)
 - An `info` command that gets the desciption and owner from [the application page](https://discord.com/developers/applications) and the GitHub page from the config file
