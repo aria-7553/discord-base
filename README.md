@@ -3,34 +3,36 @@ The repo for the crate I use to build my bots on top of, made using [Serenity](h
 
 ## Set up?
 - IDK myself yet..
-- Install and start the server for [PostgreSQL](https://www.postgresql.org/download)
-- It uses the owner and description in [the application page](https://discord.com/developers/applications) so edit them
+- Go to [the application page](https://discord.com/developers/applications), select your bot and set the description. The `info` command will use that and the account that has that application
 - Then check usage right under here
 
 ## Usage
-#### `start(config_path: &str, postgresql_port: u16)`
+#### `start(config_path: &str)`
 Does everything to start up the bot
 or creates the default config file if it's not there, then you should edit that file
 Use it as the first thing in your `#[tokio::main]` function
 ```rust
-start("config.toml", 5432).await;
+use discord_base::start;
+start("config.toml").await;
 ```
-#### `utils::log(ctx: &Context, msg: impl Display + AsRef<[u8]>)`
+#### `log(ctx: &Context, msg: impl Display + AsRef<[u8]>)`
 DMs the owner the message
 Reverts to `print_and_write()` if it failed, also telling why it failed
 ```rust
-utils::log(ctx, "Heya owner! How are you?").await;
+use discord_base::log;
+log(&ctx, "Heya owner! How are you?").await;
 ```
-#### `utils::print_and_write(msg: impl Display)`
-Prints the message and when it was called and writes them to a file called "couldnt_dm.txt"
+#### `print_and_write(msg: impl Display)`
+Prints the message and the current time in UTC and writes the same to a file called "couldnt_dm.txt"
 ```rust
-utils::print_and_write("Magic text appearing in the text file");
+use discord_base::print_and_write;
+print_and_write("Magic text appearing in the text file");
 /* The file couldnt_dm.txt is now created and has these in it:
 5 February Friday 10:38:20: Magic text appearing in the text file
 
 */
 // pretend five seconds passed
-utils::print_and_write("And even more text here");
+print_and_write("And even more text here");
 /* The file now has these in it:
 5 February Friday 10:38:20: Magic text appearing in the text file
 
@@ -41,27 +43,29 @@ utils::print_and_write("And even more text here");
 #### `utils::send_embed(ctx: &Context, reply: &Message, is_error: bool, mut embed: CreateEmbed)`
 Sends the embed to the channel reply is in, colours it with the colour you gave in your config file
 Unless `is_error` is `true` then it's the error colour *(That's all that parameter does)*
-If it's failed to send though, tries to tell why in the server in plain text
+If it's failed to send though, tries to tell why in the server in plain text (without embeds)
 or DMs the reply's sender if that also fails
 ```rust
+use discord_base::send_embed;
 let mut embed = CreateEmbed::default();
 embed.title("This is my title");
 utils::send_embed(ctx, msg, true, embed).await;
 ```
 
 ## What else it does
-*All these don't have a prefix so they're run with `@bot help`, you set your own prefix for the groups you create (I made it this way because usually only these commands collide with other bots so you can use convenient prefixes for your commands)*
+###### *All these don't have a prefix so they're run with `@bot [command]`. You set your own prefix for the groups you create*  
+*(I made it this way because usually only these commands collide with other bots so you can use convenient prefixes for your own commands)*
 - Sets the presence to `Playing a game: @BOT'S USERNAME HERE help` (This looks much better than other presences Discord allows)
-- An `info` command with aliases `about, invite, inv` that gets the desciption and owner from [the application page](https://discord.com/developers/applications) and the GitHub page from the config file  
+- An `info` command that gets the desciption and owner from [the application page](https://discord.com/developers/applications) and the GitHub page from the config file
+- A `prefix` command that sets the prefix for the guild, which works for every command in addition to `@bot` and the prefixes you set for your groups
 
 *And these from Serenity's standard_framework:*
-- A nice help command with aliases `commands, cmds` for listing all the other commands and their groups
-- Give more information about a command with `help [command name]`
-- Suggest similar commands if `help [command name]` is.. well.. similar to another command
+- A nice help command with aliases `commands, cmds`, listing all the other commands and their groups
+- Give more information about a command with `help [command]`
+- Suggest similar commands if `help [command]` is.. well.. similar to another command
 
 ## What it will be able to do (soon™)
-- Guild specific prefixes (a `prefix` command)
-- Showing the prefix with the help command
+- Showing the current prefix with the help command
 - Handling permissions
 - Localisation, different languages specific to guilds, channels, users (and letting others easily translate them)
 
