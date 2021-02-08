@@ -31,7 +31,7 @@ pub(crate) async fn handle(ctx: &Context, msg: &Message, error: DispatchError) {
         }
         DispatchError::CommandDisabled(info) => info,
         DispatchError::LackingPermissions(perms) => format!(
-            "You need these permissions to run this command and you don't have them 😤:\n{}",
+            "**You need these permissions to run this command and you don't have them** 😤\n{}",
             perms.get_permission_names().join("\n")
         ),
         DispatchError::NotEnoughArguments { min, given } => format!(

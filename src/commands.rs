@@ -19,26 +19,30 @@ use std::collections::HashSet;
 
 #[help("help", "commands", "cmds")]
 #[suggestion_text = "**Maybe you meant one of these:**\n{}"]
+#[max_levenshtein_distance(3)]
 #[no_help_available_text = "I don't know this command :("]
-#[usage_label = "You use it like:"]
-#[usage_sample_label = "For example:"]
-#[description_label = "↝ "]
-#[indention_prefix = "♡ "]
-#[aliases_label = "Alternatives"]
-#[guild_only_text = "You can't use this in my DMs though"]
-#[dm_only_text = "You can only use this in my DMs!"]
+#[usage_label = "You use it like"]
+#[usage_sample_label = "For example"]
 #[checks_label = "Only if"]
-#[individual_command_tip = "Want more info about a command? Type `help [command name]`"]
+#[aliases_label = "You can also use"]
+#[group_prefix = "Its prefix is "]
+#[grouped_label = "It's in"]
+#[description_label = "♡ "]
+#[indention_prefix = "♡ "]
+#[available_text = "You can use it in"]
+#[dm_only_text = "My DMs only 😳"]
+#[guild_only_text = "Guilds only"]
+#[dm_and_guild_text = "Both guilds and DMs"]
+#[individual_command_tip = "Want me to explain a command? Type `help [command name]`"]
 #[strikethrough_commands_tip_in_dm = ""]
 #[strikethrough_commands_tip_in_guild = ""]
-#[lacking_role = "Hide"]
-#[lacking_permissions = "Hide"]
-#[lacking_ownership = "Hide"]
-#[lacking_conditions = "Hide"]
-#[wrong_channel = "Strike"]
+#[lacking_role = "Nothing"]
+#[lacking_permissions = "Nothing"]
+#[lacking_ownership = "Nothing"]
+#[lacking_conditions = "Nothing"]
+#[wrong_channel = "Nothing"]
 #[embed_error_colour = "#b00020"]
 #[embed_success_colour = "#b29ddb"]
-#[max_levenshtein_distance(3)]
 async fn cmd_help(
     context: &Context,
     msg: &Message,
@@ -66,6 +70,9 @@ struct General;
 #[description = "How you can add me to your server, contact my owner, my GitHub page etc."]
 async fn cmd_info(ctx: &Context, msg: &Message) -> CommandResult {
     let mut embed = CreateEmbed::default();
+    embed.footer(|f| {
+        f.text("I act weirdly? Want me to speak another language? Anything else? You can friend and DM my owner anytime for any feedback you have!")
+    });
     let mut is_error = false;
 
     match BotInfo::get() {
@@ -111,7 +118,9 @@ async fn cmd_info(ctx: &Context, msg: &Message) -> CommandResult {
 #[required_permissions("MANAGE_GUILD")]
 #[only_in("guilds")]
 #[bucket = "expensive"]
-#[description = "Change the prefix I'll use in this server"]
+#[description = "Change the prefix I'll use in this server.\n*It can't end with a space though*"]
+#[usage = "[your prefix]"]
+#[example = "."]
 async fn cmd_prefix(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
     let mut embed = CreateEmbed::default();
     let mut is_error = true;

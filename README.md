@@ -59,7 +59,7 @@ send_embed(ctx, msg, true, embed).await;
 *All these don't have a prefix so they're run with `@bot [command]`. You set your own prefix for the groups you create*  
 
 *(I made it this way because usually only these commands collide with other bots so you can use convenient prefixes for your own commands)*
-- Sets the presence to `Playing a game: @BOT'S USERNAME HERE help` (This looks much better than other presences Discord allows)
+- Sets the presence to `Playing a game: @[bot's username] help` (This looks much better than other presences Discord allows)
 - An `info` command that gets the desciption and owner from [the application page](https://discord.com/developers/applications) and the GitHub page and invite link from the config file
 - A `prefix` command that sets the prefix for the guild, which works for every command in addition to `@bot` and the prefixes you set for your groups
 
@@ -68,8 +68,7 @@ send_embed(ctx, msg, true, embed).await;
 - Gives more information about a command with `help [command]`
 - Suggest similar commands if `help [command]` is.. well.. similar to another command
 
-## What it will be able to do (soon™)
-- Showing the current prefix with the help command
+### Ideas I had but decided not to implement
 - Handling permissions
 - Localisation, different languages specific to guilds, channels, users (and letting others easily translate them)
 
