@@ -1,9 +1,7 @@
-use std::collections::HashSet;
-
-use super::setup::BotConfig;
+use super::globals::BotConfig;
 use crate::{
+    globals::{BotInfo, SqlitePoolKey},
     log, send_embed,
-    setup::{BotInfo, SqlitePoolKey},
 };
 use serenity::{
     builder::CreateEmbed,
@@ -17,6 +15,7 @@ use serenity::{
     prelude::Mentionable,
 };
 use sqlx::query;
+use std::collections::HashSet;
 
 #[help("help", "commands", "cmds")]
 #[suggestion_text = "**Maybe you meant one of these:**\n{}"]
@@ -52,6 +51,11 @@ async fn cmd_help(
     help_commands::with_embeds(context, msg, args, help_options, groups, owners).await;
     Ok(())
 }
+
+#[group("Master")]
+#[sub_groups(General)]
+#[help_available(false)]
+pub struct Master;
 
 #[group("General Stuff")]
 #[commands(cmd_info, cmd_prefix)]
@@ -97,7 +101,14 @@ async fn cmd_info(ctx: &Context, msg: &Message) -> CommandResult {
 }
 
 #[command("prefix")]
-#[aliases("setprefix", "set_prefix", "set-prefix", "changeprefix", "change_prefix", "change-prefix")]
+#[aliases(
+    "setprefix",
+    "set_prefix",
+    "set-prefix",
+    "changeprefix",
+    "change_prefix",
+    "change-prefix"
+)]
 #[num_args(1)]
 #[required_permissions("MANAGE_GUILD")]
 #[only_in("guilds")]
@@ -136,7 +147,7 @@ async fn cmd_prefix(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
     };
 
     if let (Some(prefix), Some(guild_id), Some(db)) = (prefix, guild_id, db) {
-        if prefix.len() > 10 {
+        if prefix.chars().count() > 10 {
             embed
                 .title("Your prefix can't be longer than 10 characters")
                 .description("Why would you want it that long anyway..");

@@ -1,16 +1,9 @@
-use crate::{command_error, commands, log, print_and_write, Handler};
+use crate::commands::MASTER_GROUP;
 use once_cell::sync::OnceCell;
 use serde::Deserialize;
-use serenity::{
-    client::Context,
-    framework::{standard::buckets::LimitedFor, StandardFramework},
-    http::client::Http,
-    model::{channel::Message, id::UserId},
-    prelude::TypeMapKey,
-    Client,
-};
+use serenity::{http::client::Http, model::id::UserId, prelude::TypeMapKey};
 use sqlx::{query, sqlite::SqliteConnectOptions, SqlitePool};
-use std::{fs, io};
+use std::{convert::TryFrom, fs, io};
 
 const DEFAULT_CONFIG: &'static str =
     "# The token of the bot: https://discordpy.readthedocs.io/en/latest/discord.html#creating-a-bot-account
@@ -24,36 +17,6 @@ github = \"https://github.com/USER NAME HERE/REPO NAME HERE\"
 
 # The colour utils::send_embed() will use if is_error is false: https://www.checkyourmath.com/convert/color/rgb_decimal.php
 colour = 11771355";
-
-pub struct SqlitePoolKey;
-impl TypeMapKey for SqlitePoolKey {
-    type Value = SqlitePool;
-}
-
-pub async fn start(config_path: &str) {
-    BotConfig::set(config_path);
-    let config = BotConfig::get().expect("Couldn't access BOT_CONFIG to get the token");
-
-    BotInfo::set(config.token()).await;
-    let bot_info = BotInfo::get().expect("Couldn't access BOT_INFO to get the owner and bot ID");
-
-    let db = set_db().await;
-
-    let client_builder = Client::builder(&config.token())
-        .event_handler(Handler)
-        .type_map_insert::<SqlitePoolKey>(db);
-
-    let framework = set_framework(bot_info.user(), bot_info.owner()).await;
-
-    let mut client = client_builder
-        .framework(framework)
-        .await
-        .expect("Couldn't create the client");
-
-    if let Err(e) = client.start_autosharded().await {
-        print_and_write(format!("Couldn't start the client: {}", e));
-    }
-}
 
 #[derive(Deserialize)]
 pub struct BotConfig {
@@ -156,7 +119,60 @@ impl BotInfo {
     }
 }
 
-async fn set_db() -> SqlitePool {
+pub struct CmdInfo {
+    commands: Vec<&'static str>,
+    longest_len: u8,
+}
+
+static CMD_INFO: OnceCell<CmdInfo> = OnceCell::new();
+
+impl CmdInfo {
+    pub(crate) fn set() {
+        let mut commands = MASTER_GROUP
+            .options
+            .sub_groups
+            .iter()
+            .flat_map(|g| g.options.commands.iter().flat_map(|c| c.options.names))
+            .copied()
+            .collect::<Vec<_>>();
+        commands.push("help");
+
+        let longest_len = u8::try_from(
+            commands
+                .iter()
+                .map(|s| s.chars().count())
+                .max()
+                .expect("No commands found"),
+        )
+        .expect("Command name too long")
+            + 10;
+
+        CMD_INFO
+            .set(CmdInfo {
+                commands,
+                longest_len,
+            })
+            .unwrap_or_else(|_| panic!("Couldn't set CmdInfo to CMD_INFO"))
+    }
+
+    pub fn get() -> Option<&'static CmdInfo> {
+        CMD_INFO.get()
+    }
+
+    pub fn commands(&self) -> &Vec<&'static str> {
+        &self.commands
+    }
+    pub fn longest_len(&self) -> u8 {
+        self.longest_len
+    }
+}
+
+pub struct SqlitePoolKey;
+impl TypeMapKey for SqlitePoolKey {
+    type Value = SqlitePool;
+}
+
+pub(crate) async fn set_db() -> SqlitePool {
     let db = SqlitePool::connect_with(
         SqliteConnectOptions::new()
             .filename("database.sqlite")
@@ -176,77 +192,4 @@ async fn set_db() -> SqlitePool {
     .expect("Couldn't create the prefix table");
 
     db
-}
-
-async fn prefix_check(ctx: &Context, msg: &Message) -> Option<String> {
-    let data = ctx.data.read().await;
-    let db = data.get::<SqlitePoolKey>();
-    let guild_id = msg.guild_id;
-
-    if let None = db {
-        return None;
-    }
-    if let None = guild_id {
-        return None;
-    }
-
-    if let (Some(db), Some(guild_id)) = (db, guild_id) {
-        let guild_id_int = guild_id.0 as i64;
-        match query!(
-            "SELECT prefix FROM prefixes WHERE guild_id = ?",
-            guild_id_int
-        )
-        .fetch_optional(db)
-        .await
-        {
-            Err(err) => {
-                log(
-                    ctx,
-                    format!(
-                        "Couldn't fetch prefix from the database for the prefix check: {}",
-                        err
-                    ),
-                )
-                .await;
-                None
-            }
-            Ok(row) => match row {
-                Some(row) => row.prefix,
-                None => None,
-            },
-        }
-    } else {
-        None
-    }
-}
-
-async fn set_framework(bot_id: UserId, owner_id: UserId) -> StandardFramework {
-    StandardFramework::new()
-        .configure(|c| {
-            c.prefix("")
-                .no_dm_prefix(true)
-                .case_insensitivity(true)
-                .on_mention(Some(bot_id))
-                .owners(vec![owner_id].into_iter().collect())
-                .dynamic_prefix(|ctx, msg| Box::pin(prefix_check(ctx, msg)))
-        })
-        .on_dispatch_error(command_error::handle)
-        .bucket("general", |b| {
-            b.limit_for(LimitedFor::Channel)
-                .await_ratelimits(1)
-                .delay_action(command_error::delay_action)
-                .time_span(600)
-                .limit(10)
-        })
-        .await
-        .bucket("expensive", |b| {
-            b.limit_for(LimitedFor::Guild)
-                .await_ratelimits(1)
-                .delay_action(command_error::delay_action)
-                .time_span(3600)
-                .limit(10)
-        })
-        .await
-        .help(&commands::CMD_HELP)
-        .group(&commands::GENERAL_GROUP)
 }

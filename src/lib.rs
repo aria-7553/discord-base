@@ -1,13 +1,15 @@
 mod command_error;
+mod command_options;
 mod commands;
-pub mod setup;
+mod globals;
+pub mod start;
 
+use globals::{BotConfig, BotInfo};
 use serenity::{
     builder::CreateEmbed,
     client::{Context, EventHandler},
     model::{channel::Message, id::GuildId, misc::Mentionable, prelude::Activity},
 };
-use setup::{BotConfig, BotInfo};
 use std::{fmt::Display, io::Write};
 
 pub struct Handler;

@@ -57,12 +57,12 @@ send_embed(ctx, msg, true, embed).await;
 
 *(I made it this way because usually only these commands collide with other bots so you can use convenient prefixes for your own commands)*
 - Sets the presence to `Playing a game: @BOT'S USERNAME HERE help` (This looks much better than other presences Discord allows)
-- An `info` command that gets the desciption and owner from [the application page](https://discord.com/developers/applications) and the GitHub page from the config file
+- An `info` command that gets the desciption and owner from [the application page](https://discord.com/developers/applications) and the GitHub page and invite link from the config file
 - A `prefix` command that sets the prefix for the guild, which works for every command in addition to `@bot` and the prefixes you set for your groups
 
 *And these from Serenity's standard_framework:*
-- A nice help command with aliases `commands, cmds`, listing all the other commands and their groups
-- Give more information about a command with `help [command]`
+- A nice help command, listing all the other commands and their groups
+- Gives more information about a command with `help [command]`
 - Suggest similar commands if `help [command]` is.. well.. similar to another command
 
 ## What it will be able to do (soon™)
