@@ -85,7 +85,7 @@ License and stuff I don't care, neither should you but contact me if you want to
 ## Ideas I had but decided not to implement
 ### Handling permissions
 Too expensive, limited, bad for UX, unnecessary and inconsistent. Doing proper error checking and informing the user on an error is just a better option
-#### Localisation
+### Localisation
 Makes everything more expensive, you now have to check the language for every message you're sending, which means you can't use any static string. Community translation will always be inconsistent, slow and incomplete. Most users wouldn't expect or use it. Having separate bots for each language is just a better option
-#### Customisation
+### Customisation
 Again makes everything more expensive, since it means you can't use any static string. If someone is hosting the bot, they most likely have enough knowledge to search for a string in the source and replace it then build. It isn't necessary at all and I still tried to include customisation when it didn't mean a performance loss
