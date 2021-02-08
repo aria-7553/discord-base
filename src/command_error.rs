@@ -1,11 +1,10 @@
+use crate::send_embed;
 use serenity::{
     builder::CreateEmbed,
     client::Context,
     framework::standard::{macros::hook, DispatchError, Reason},
     model::channel::Message,
 };
-
-use crate::send_embed;
 
 #[hook]
 pub(crate) async fn handle(ctx: &Context, msg: &Message, error: DispatchError) {

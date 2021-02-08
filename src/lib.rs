@@ -102,23 +102,31 @@ pub async fn log(ctx: &Context, msg: impl Display + AsRef<[u8]>) {
 }
 
 pub fn print_and_write(msg: impl Display) {
-    let print_and_write = format!(
+    let mut print_and_write = format!(
         "{}: {}\n\n",
         chrono::Utc::now().format("%e %B %A %H:%M:%S"),
         msg
     );
     println!("{}", print_and_write);
 
+    let log_file = match BotConfig::get() {
+        Some(config) => config.log_file(),
+        None => {
+            print_and_write += "Writing into a file named \"discord-base logs.txt\" because getting BOT_CONFIG also failed\n\n";
+            "discord-base logs.txt"
+        }
+    };
+
     match std::fs::OpenOptions::new()
         .create(true)
         .append(true)
-        .open("couldnt_dm.txt")
+        .open(log_file)
     {
         Ok(mut file) => {
             if let Err(err) = file.write(print_and_write.as_bytes()) {
                 println!("Couldn't write to the log file: {}", err)
             }
         }
-        Err(err) => println!("Couldn't open the log file: {}", err),
+        Err(err) => println!("Couldn't open or create the log file: {}", err),
     }
 }

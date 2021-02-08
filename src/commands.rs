@@ -22,15 +22,15 @@ use std::collections::HashSet;
 #[no_help_available_text = "I don't know this command :("]
 #[usage_label = "You use it like:"]
 #[usage_sample_label = "For example:"]
-#[description_label = "↝"]
+#[description_label = "↝ "]
+#[indention_prefix = "♡ "]
 #[aliases_label = "Alternatives"]
 #[guild_only_text = "You can't use this in my DMs though"]
-#[checks_label = "Only if"]
 #[dm_only_text = "You can only use this in my DMs!"]
-#[command_not_found_text = "I don't know the command `{}` :("]
+#[checks_label = "Only if"]
 #[individual_command_tip = "Want more info about a command? Type `help [command name]`"]
 #[strikethrough_commands_tip_in_dm = ""]
-#[strikethrough_commands_tip_in_guild = "*If a command is ~~stricken through~~ it means you're in the wrong channel for that command*"]
+#[strikethrough_commands_tip_in_guild = ""]
 #[lacking_role = "Hide"]
 #[lacking_permissions = "Hide"]
 #[lacking_ownership = "Hide"]
@@ -39,7 +39,6 @@ use std::collections::HashSet;
 #[embed_error_colour = "#b00020"]
 #[embed_success_colour = "#b29ddb"]
 #[max_levenshtein_distance(3)]
-#[indention_prefix = "♡"]
 async fn cmd_help(
     context: &Context,
     msg: &Message,
@@ -62,10 +61,9 @@ pub struct Master;
 struct General;
 
 #[command("info")]
-#[bucket = "general"]
-#[help_available]
-#[description = "How you can add me to your server, contact my owner, my GitHub page etc."]
 #[aliases("about", "invite", "inv")]
+#[bucket = "general"]
+#[description = "How you can add me to your server, contact my owner, my GitHub page etc."]
 async fn cmd_info(ctx: &Context, msg: &Message) -> CommandResult {
     let mut embed = CreateEmbed::default();
     let mut is_error = false;
@@ -113,13 +111,12 @@ async fn cmd_info(ctx: &Context, msg: &Message) -> CommandResult {
 #[required_permissions("MANAGE_GUILD")]
 #[only_in("guilds")]
 #[bucket = "expensive"]
-#[help_available]
 #[description = "Change the prefix I'll use in this server"]
 async fn cmd_prefix(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
     let mut embed = CreateEmbed::default();
     let mut is_error = true;
-    let data = ctx.data.read().await;
 
+    let data = ctx.data.read().await;
     let db = data.get::<SqlitePoolKey>();
     let prefix = args.current();
     let guild_id = msg.guild_id;

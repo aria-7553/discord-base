@@ -1,5 +1,3 @@
-use std::{cmp::min};
-
 use crate::{
     command_error, commands,
     globals::{CmdInfo, SqlitePoolKey},
@@ -11,6 +9,7 @@ use serenity::{
     model::{channel::Message, id::UserId},
 };
 use sqlx::query;
+use std::cmp::min;
 
 async fn prefix_check(ctx: &Context, msg: &Message) -> Option<String> {
     let guild_id = msg.guild_id?;

@@ -21,6 +21,7 @@ colour = 11771355";
 #[derive(Deserialize)]
 pub struct BotConfig {
     token: String,
+    log_file: String,
     invite: String,
     github: String,
     colour: u32,
@@ -52,9 +53,11 @@ impl BotConfig {
     pub fn get() -> Option<&'static BotConfig> {
         BOT_CONFIG.get()
     }
-
     pub fn token(&self) -> &String {
         &self.token
+    }
+    pub fn log_file(&self) -> &String {
+        &self.log_file
     }
     pub fn invite(&self) -> &String {
         &self.invite

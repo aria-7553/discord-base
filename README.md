@@ -23,15 +23,18 @@ use discord_base::log;
 log(&ctx, "Heya owner! How are you?").await;
 ```
 #### `print_and_write(msg: impl Display)`
-Prints the message and the current time in UTC and writes the same to a file called "couldnt_dm.txt"
+Prints and writes the message and the current time in UTC to the log_file set in the config
 ```rust
+/*Assume the config file has this in it:
+log_file = "logs.txt"
+*/
 use discord_base::print_and_write;
 print_and_write("Magic text appearing in the text file");
-/* The file couldnt_dm.txt is now created and has these in it:
+/* The file logs.txt is now created and has these in it:
 5 February Friday 10:38:20: Magic text appearing in the text file
 
 */
-// pretend five seconds passed
+// Pretend five seconds passed
 print_and_write("And even more text here");
 /* The file now has these in it:
 5 February Friday 10:38:20: Magic text appearing in the text file
@@ -44,7 +47,7 @@ print_and_write("And even more text here");
 Sends the embed to the channel reply is in, colours it with the colour you gave in your config file
 Unless `is_error` is `true` then it's the error colour *(That's all that parameter does)*
 If it's failed to send though, tries to tell why in the server in plain text (without embeds)
-or DMs the reply's sender if that also fails
+Or DMs the reply's sender if that also fails
 ```rust
 use discord_base::send_embed;
 let mut embed = CreateEmbed::default();
