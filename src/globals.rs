@@ -9,6 +9,12 @@ const DEFAULT_CONFIG: &'static str =
     "# The token of the bot: https://discordpy.readthedocs.io/en/latest/discord.html#creating-a-bot-account
 token = \"TOKEN HERE\"
 
+# The name of the file for logging stuff if it couldn't DM you
+log_file = \"logs.txt\"
+
+# The name of the file to use for database. Should end with: .sqlite, .sqlite3, .db or .db3
+database_file = \"database.sqlite\"
+
 # The invite link for the bot: https://discordpy.readthedocs.io/en/latest/discord.html#inviting-your-bot
 invite = \"https://discord.com/api/oauth2/THE REST OF THE LINK HERE\"
 
@@ -22,6 +28,7 @@ colour = 11771355";
 pub struct BotConfig {
     token: String,
     log_file: String,
+    database_file: String,
     invite: String,
     github: String,
     colour: u32,
@@ -176,9 +183,13 @@ impl TypeMapKey for SqlitePoolKey {
 }
 
 pub(crate) async fn set_db() -> SqlitePool {
+    let db_filename = BotConfig::get()
+        .expect("Couldn't get BOT_CONFIG to get the database file")
+        .database_file
+        .as_str();
     let db = SqlitePool::connect_with(
         SqliteConnectOptions::new()
-            .filename("database.sqlite")
+            .filename(db_filename)
             .create_if_missing(true),
     )
     .await
