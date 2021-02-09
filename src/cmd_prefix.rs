@@ -7,7 +7,10 @@ use serenity::{
 use sqlx::{query, Row};
 use std::cmp::min;
 
-use crate::{globals::{CmdInfo, SqlitePoolKey}, log, send_embed};
+use crate::{
+    globals::{CmdInfo, SqlitePoolKey},
+    log, send_embed,
+};
 
 #[command("prefix")]
 #[aliases(
@@ -18,7 +21,6 @@ use crate::{globals::{CmdInfo, SqlitePoolKey}, log, send_embed};
     "change_prefix",
     "change-prefix"
 )]
-#[num_args(1)]
 #[required_permissions("MANAGE_GUILD")]
 #[only_in("guilds")]
 #[bucket = "expensive"]
@@ -31,14 +33,9 @@ async fn cmd_prefix(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
 
     let data = ctx.data.read().await;
     let db = data.get::<SqlitePoolKey>();
-    let prefix = args.current();
+    let prefix = args.rest().trim();
     let guild_id = msg.guild_id;
 
-    if let None = prefix {
-        log(ctx, "args.current() is None for the prefix command").await;
-        embed.title("Something very weird happened and I let you use this command without giving a prefix")
-        .description("Rerun the command but this time actually type the prefix you want after the command");
-    };
     if let None = guild_id {
         log(ctx, "msg.guild_id is None for the prefix command").await;
         embed
@@ -56,7 +53,7 @@ async fn cmd_prefix(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
             .description("I lost my whole book where I write things down, sorry..");
     };
 
-    if let (Some(prefix), Some(guild_id), Some(db)) = (prefix, guild_id, db) {
+    if let (Some(guild_id), Some(db)) = (guild_id, db) {
         if prefix.chars().count() > 10 {
             embed
                 .title("Your prefix can't be longer than 10 characters")
@@ -79,7 +76,11 @@ async fn cmd_prefix(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
                     );
             } else {
                 is_error = false;
-                embed.description(format!("Voila! Your prefix here is now `{}`", prefix));
+                embed.description(if prefix != "" {
+                    format!("Voila! My prefix here is now `{}`", prefix)
+                } else {
+                    "Yay! I don't even need a prefix here anymore".to_string()
+                });
             }
         }
     }
