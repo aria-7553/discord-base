@@ -1,5 +1,9 @@
-use crate::{Handler, command_options::set_framework, globals::{BotConfig, BotInfo, CmdInfo, SqlitePoolKey, set_db}, print_and_write};
-use serenity::{Client, client::bridge::gateway::GatewayIntents};
+use crate::{
+    command_options::set_framework,
+    globals::{set_db, BotConfig, BotInfo, CmdInfo, SqlitePoolKey},
+    print_and_write, Handler,
+};
+use serenity::{client::bridge::gateway::GatewayIntents, Client};
 
 pub async fn start(config_path: &str) {
     BotConfig::set(config_path);
@@ -13,7 +17,11 @@ pub async fn start(config_path: &str) {
     let db = set_db().await;
 
     let client_builder = Client::builder(&config.token())
-        .intents(GatewayIntents::GUILDS)
+        .intents(
+            GatewayIntents::GUILD_MESSAGES
+                | GatewayIntents::DIRECT_MESSAGES
+                | GatewayIntents::GUILDS
+        )
         .event_handler(Handler)
         .type_map_insert::<SqlitePoolKey>(db);
 

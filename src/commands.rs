@@ -58,7 +58,7 @@ async fn cmd_help(
 #[group("Master")]
 #[sub_groups(General)]
 #[help_available(false)]
-pub struct Master;
+struct Master;
 
 #[group("General Stuff")]
 #[commands(cmd_info, cmd_prefix)]
@@ -118,7 +118,7 @@ async fn cmd_info(ctx: &Context, msg: &Message) -> CommandResult {
 #[required_permissions("MANAGE_GUILD")]
 #[only_in("guilds")]
 #[bucket = "expensive"]
-#[description = "Change the prefix I'll use in this server.\n*It can't end with a space though*"]
+#[description = "Change the prefix I'll use in this server\n(It can't end with a space though)"]
 #[usage = "[your prefix]"]
 #[example = "."]
 async fn cmd_prefix(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
