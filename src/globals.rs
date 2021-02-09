@@ -184,11 +184,11 @@ pub(crate) async fn set_db() -> SqlitePool {
     .await
     .expect("Couldn't connect to the database");
 
-    query!(
+    query(
         "CREATE TABLE IF NOT EXISTS prefixes (
         guild_id INTEGER PRIMARY KEY,
         prefix TEXT
-    ) WITHOUT ROWID"
+    ) WITHOUT ROWID",
     )
     .execute(&db)
     .await

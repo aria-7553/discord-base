@@ -8,7 +8,7 @@ use serenity::{
     framework::{standard::buckets::LimitedFor, StandardFramework},
     model::{channel::Message, id::UserId},
 };
-use sqlx::query;
+use sqlx::{query, Row};
 use std::cmp::min;
 
 async fn prefix_check(ctx: &Context, msg: &Message) -> Option<String> {
@@ -34,13 +34,10 @@ async fn prefix_check(ctx: &Context, msg: &Message) -> Option<String> {
         }
     };
 
-    let guild_id_int = guild_id.0 as i64;
-    match query!(
-        "SELECT prefix FROM prefixes WHERE guild_id = ?",
-        guild_id_int
-    )
-    .fetch_optional(db)
-    .await
+    match query("SELECT prefix FROM prefixes WHERE guild_id = ?")
+        .bind(guild_id.0 as i64)
+        .fetch_optional(db)
+        .await
     {
         Err(err) => {
             log(
@@ -53,7 +50,17 @@ async fn prefix_check(ctx: &Context, msg: &Message) -> Option<String> {
             .await;
             None
         }
-        Ok(row) => row?.prefix,
+        Ok(row) => match row?.try_get(0) {
+            Ok(prefix) => prefix,
+            Err(err) => {
+                log(
+                    ctx,
+                    format!("Couldn't get the prefix column for the guild: {}", err),
+                )
+                .await;
+                None
+            }
+        },
     }
 }
 

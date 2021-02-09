@@ -158,13 +158,12 @@ async fn cmd_prefix(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
                 .title("Your prefix can't be longer than 10 characters")
                 .description("Why would you want it that long anyway..");
         } else {
-            let guild_id_int = guild_id.0 as i64;
-            if let Err(err) = query!(
+            if let Err(err) = query(
                 "INSERT OR REPLACE INTO prefixes (guild_id, prefix)
                 VALUES(?, ?);",
-                guild_id_int,
-                prefix
             )
+            .bind(guild_id.0 as i64)
+            .bind(prefix)
             .execute(db)
             .await
             {
