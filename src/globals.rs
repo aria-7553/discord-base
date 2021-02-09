@@ -1,4 +1,3 @@
-use crate::commands::MASTER_GROUP;
 use once_cell::sync::OnceCell;
 use serde::Deserialize;
 use serenity::{http::client::Http, model::id::UserId, prelude::TypeMapKey};
@@ -24,6 +23,37 @@ github = \"https://github.com/USER NAME HERE/REPO NAME HERE\"
 # The colour utils::send_embed() will use if is_error is false: https://www.checkyourmath.com/convert/color/rgb_decimal.php
 colour = 11771355";
 
+pub struct SqlitePoolKey;
+impl TypeMapKey for SqlitePoolKey {
+    type Value = SqlitePool;
+}
+
+pub async fn set_db() -> SqlitePool {
+    let db_filename = BotConfig::get()
+        .expect("Couldn't get BOT_CONFIG to get the database file")
+        .database_file
+        .as_str();
+    let db = SqlitePool::connect_with(
+        SqliteConnectOptions::new()
+            .filename(db_filename)
+            .create_if_missing(true),
+    )
+    .await
+    .expect("Couldn't connect to the database");
+
+    query(
+        "CREATE TABLE IF NOT EXISTS prefixes (
+        guild_id INTEGER PRIMARY KEY,
+        prefix TEXT
+    ) WITHOUT ROWID",
+    )
+    .execute(&db)
+    .await
+    .expect("Couldn't create the prefix table");
+
+    db
+}
+
 #[derive(Deserialize)]
 pub struct BotConfig {
     token: String,
@@ -37,7 +67,7 @@ pub struct BotConfig {
 static BOT_CONFIG: OnceCell<BotConfig> = OnceCell::new();
 
 impl BotConfig {
-    pub(crate) fn set(config_path: &str) {
+    pub fn set(config_path: &str) {
         let config: BotConfig =
             toml::from_str(&fs::read_to_string(config_path).unwrap_or_else(|err| {
                 if err.kind() == io::ErrorKind::NotFound {
@@ -60,6 +90,7 @@ impl BotConfig {
     pub fn get() -> Option<&'static BotConfig> {
         BOT_CONFIG.get()
     }
+
     pub fn token(&self) -> &String {
         &self.token
     }
@@ -87,7 +118,7 @@ pub struct BotInfo {
 static BOT_INFO: OnceCell<BotInfo> = OnceCell::new();
 
 impl BotInfo {
-    pub(crate) async fn set(token: &str) {
+    pub async fn set(token: &str) {
         let http = Http::new_with_token(token);
         let app_info = http
             .get_current_application_info()
@@ -137,8 +168,8 @@ pub struct CmdInfo {
 static CMD_INFO: OnceCell<CmdInfo> = OnceCell::new();
 
 impl CmdInfo {
-    pub(crate) fn set() {
-        let mut commands = MASTER_GROUP
+    pub fn set() {
+        let mut commands = crate::MASTER_GROUP
             .options
             .sub_groups
             .iter()
@@ -175,35 +206,4 @@ impl CmdInfo {
     pub fn longest_len(&self) -> u8 {
         self.longest_len
     }
-}
-
-pub struct SqlitePoolKey;
-impl TypeMapKey for SqlitePoolKey {
-    type Value = SqlitePool;
-}
-
-pub(crate) async fn set_db() -> SqlitePool {
-    let db_filename = BotConfig::get()
-        .expect("Couldn't get BOT_CONFIG to get the database file")
-        .database_file
-        .as_str();
-    let db = SqlitePool::connect_with(
-        SqliteConnectOptions::new()
-            .filename(db_filename)
-            .create_if_missing(true),
-    )
-    .await
-    .expect("Couldn't connect to the database");
-
-    query(
-        "CREATE TABLE IF NOT EXISTS prefixes (
-        guild_id INTEGER PRIMARY KEY,
-        prefix TEXT
-    ) WITHOUT ROWID",
-    )
-    .execute(&db)
-    .await
-    .expect("Couldn't create the prefix table");
-
-    db
 }

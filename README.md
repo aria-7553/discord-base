@@ -1,22 +1,21 @@
 # discord-base
-The repo for the crate I use to build my bots on top of, made using [Serenity](https://github.com/serenity-rs/serenity) in Rust!  
+The repo I clone and build my bots on top of, made with love using [Serenity](https://github.com/serenity-rs/serenity) in Rust!
 
 ## How to set it up
-1. IDK myself yet..
+1. Clone this repository
 2. Go to [the application page](https://discord.com/developers/applications), select your bot and set the description. The `info` command will use that and the account that has that application
-3. Then check usage right under here
+3. Open your terminal and `cd` into to the directory with `Cargo.toml` in it
+3. Type `cargo run` in the terminal to generate the default config file
+4. Instructions on how to edit it are inside
+5. Then edit it, add files to it, do whatever you want!
 
-## How to use it
-#### `start(config_path: &str)`
-- Does everything to start up the bot
-- Or creates the default config file if it's not there, then you should edit that file
-- Use it as the first thing in your `#[tokio::main]` function
-```rust
-use discord_base::start;
-start("config.toml").await;
-```
+## What you can do with it
+#### `set_db()`
+- Loads the SQLite database or creates it if it doesn't exists
+- Creates the prefix table if it doesn't exist
+- You should add whatever you need get your database ready to it
 #### `log(ctx: &Context, msg: impl Display + AsRef<[u8]>)`
-- DMs the owner the message  
+- DMs the owner the message
 - Reverts to `print_and_write` if it failed, also telling why it failed
 ```rust
 use discord_base::log;
@@ -44,8 +43,8 @@ print_and_write("And even more text here");
 */
 ```
 #### `send_embed(ctx: &Context, reply: &Message, is_error: bool, mut embed: CreateEmbed)`
-- Sends the embed to the channel reply is in, colours it with the colour you gave in your config file  
-- Unless `is_error` is `true` then it's the error colour (That's all that parameter does)  
+- Sends the embed to the channel reply is in and colours it with the colour you gave in your config file  
+- Unless `is_error` is `true` then it's the baseline error colour (That's all that parameter does)  
 - If it's failed to send though, tries to tell why in the server in plain text (without embeds)  
 - Or DMs the reply's sender if that also fails
 ```rust
@@ -57,14 +56,14 @@ send_embed(ctx, msg, true, embed).await;
 
 ## What else it does
 ### Error handling
-Everything that's done in this crate follows these principals:
+Everything that's done follows these principals:
 - If the action isn't expected by the user, don't inform them even if it fails
 - If anything else, do inform them. Fall back to DMing the user if informing the user failed
 - If it's a user error, tell them the error and how to fix it if it's not obvious
 - If it's a bot error, tell them how to report it and what they can do and inform the owner of the bot. Fall back to printing and logging in a file
 - If we can't be sure, tell them the error and how to report it if it looks like a bot error  
 
-These, combined with Rust's safety, ensure the best user experience. Most of these errors could be handled by falling back (Not using embeds, DMing the user etc.) but this overcomplicates the bot and makes it inconsistent, without forcing the user to fix it, so it's not a good practice
+These, combined with Rust's safety, ensure the best user experience. Most of these errors could be handled by falling back (Not using embeds, DMing the user etc.) but this overcomplicates the bot and makes it inconsistent, instead of forcing the user to fix it, so it's not a good practice
 ### Optimisation
 - I've tried my best to use statics and avoid `await`s
 - Also adding buckets and rate limit handling to ensure it isn't abused

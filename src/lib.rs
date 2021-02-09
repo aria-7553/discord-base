@@ -1,16 +1,27 @@
-mod command_error;
-mod command_options;
-mod commands;
-mod globals;
-pub mod start;
+pub mod cmd_error;
+pub mod cmd_help;
+pub mod cmd_info;
+pub mod cmd_prefix;
+pub mod globals;
 
+use crate::{cmd_info::CMD_INFO_COMMAND, cmd_prefix::CMD_PREFIX_COMMAND};
 use globals::{BotConfig, BotInfo};
 use serenity::{
     builder::CreateEmbed,
     client::{Context, EventHandler},
+    framework::standard::macros::group,
     model::{channel::Message, id::GuildId, misc::Mentionable, prelude::Activity},
 };
 use std::{fmt::Display, io::Write};
+
+#[group("Master")]
+#[sub_groups(General)]
+#[help_available(false)]
+struct Master;
+
+#[group("General Stuff")]
+#[commands(cmd_info, cmd_prefix)]
+struct General;
 
 pub struct Handler;
 #[serenity::async_trait]
