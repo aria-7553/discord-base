@@ -1,10 +1,4 @@
-use discord_base::{
-    cmd_error,
-    cmd_help::CMD_HELP,
-    cmd_prefix::prefix_check,
-    globals::{set_db, BotConfig, BotInfo, CmdInfo, SqlitePoolKey},
-    print_and_write, Handler, GENERAL_GROUP, MASTER_GROUP,
-};
+use discord_base::{cmd_error, cmd_help::CMD_HELP, cmd_prefix::prefix_check, globals::{set_db, BotConfig, BotInfo, CmdInfo, SqlitePoolKey}, print_and_write, Handler, GENERAL_GROUP, MASTER_GROUP, set_dir};
 use serenity::{
     client::bridge::gateway::GatewayIntents,
     framework::{standard::buckets::LimitedFor, StandardFramework},
@@ -13,6 +7,8 @@ use serenity::{
 
 #[tokio::main]
 async fn main() {
+    set_dir();
+
     BotConfig::set("config.toml");
     let config = BotConfig::get().expect("Couldn't access BOT_CONFIG to get the token");
 
