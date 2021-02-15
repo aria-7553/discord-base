@@ -79,6 +79,9 @@ License and stuff I don't care, neither should you but contact me if you want to
 - Slow: GitHub issues or something
 - Way slower (or never, if you're unlucky): wentaas@gmail.com
 
+## Thank yous
+A huge thank you to everyone in the [Serenity Discord Server](https://discord.gg/9X7vCus) and the [Rust Community Discord Server](https://discord.com/invite/aVESxV8) for their continuous help and bearing with my smooth brain
+
 ## Ideas I had but decided not to implement
 
 ### Handling permissions
@@ -89,6 +92,3 @@ Makes everything more expensive, you now have to check the language for every me
 
 ### Customisation
 Again makes everything more expensive, since it means you can't use any static string. If someone is hosting the bot, they most likely have enough knowledge to search for a string in the source and replace it then build. It isn't necessary at all and I still tried to include customisation when it didn't mean a performance loss
-
-[docs]: https://docs.rs/serenity
-
