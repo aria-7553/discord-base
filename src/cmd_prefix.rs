@@ -92,15 +92,19 @@ async fn cmd_prefix(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
 
 pub async fn prefix_check(ctx: &Context, msg: &Message) -> Option<String> {
     let guild_id = msg.guild_id?;
-
     let cmd_info = CmdInfo::get()?;
-
     let boundary = min(msg.content.chars().count(), cmd_info.longest_len().into());
-    if !cmd_info
-        .commands()
-        .iter()
-        .any(|s| msg.content[..boundary].contains(s))
-    {
+
+    let mut is_cmd = false;
+    for cmd in cmd_info.cmds().iter() {
+        if msg.content[..boundary].contains(cmd) {
+            is_cmd = true;
+            if msg.content.starts_with(".") && cmd_info.custom_cmds().contains(cmd) {
+                return Some(".".to_string());
+            }
+        }
+    }
+    if !is_cmd {
         return None;
     }
 
@@ -126,7 +130,7 @@ pub async fn prefix_check(ctx: &Context, msg: &Message) -> Option<String> {
                     err
                 ),
             )
-            .await;
+                .await;
             None
         }
         Ok(row) => match row?.try_get(0) {
@@ -136,7 +140,7 @@ pub async fn prefix_check(ctx: &Context, msg: &Message) -> Option<String> {
                     ctx,
                     format!("Couldn't get the prefix column for the guild: {:?}", err),
                 )
-                .await;
+                    .await;
                 None
             }
         },

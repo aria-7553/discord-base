@@ -162,37 +162,40 @@ impl BotInfo {
 }
 
 pub struct CmdInfo {
-    commands: Vec<&'static str>,
+    cmds: Vec<&'static str>,
     longest_len: u8,
+    custom_cmds: Vec<&'static str>,
 }
 
 static CMD_INFO: OnceCell<CmdInfo> = OnceCell::new();
 
 impl CmdInfo {
     pub fn set() {
-        let mut commands = crate::MASTER_GROUP
-            .options
-            .sub_groups
-            .iter()
-            .flat_map(|g| g.options.commands.iter().flat_map(|c| c.options.names))
-            .copied()
-            .collect::<Vec<_>>();
-        commands.push("help");
+        let mut cmds = vec!["help"];
+        let mut custom_cmds = Vec::new();
+
+        for group in crate::MASTER_GROUP.options.sub_groups.iter() {
+            let group_cmds = group.options.commands.iter().flat_map(|c| c.options.names);
+            &cmds.extend(group_cmds);
+            if group.name != "General Stuff" {
+                custom_cmds.extend(&cmds)
+            }
+        }
 
         let longest_len = u8::try_from(
-            commands
-                .iter()
+            cmds.iter()
                 .map(|s| s.chars().count())
                 .max()
                 .expect("No commands found"),
         )
-        .expect("Command name too long")
+            .expect("Command name too long")
             + 10;
 
         CMD_INFO
             .set(CmdInfo {
-                commands,
+                cmds,
                 longest_len,
+                custom_cmds,
             })
             .unwrap_or_else(|_| panic!("Couldn't set CmdInfo to CMD_INFO"))
     }
@@ -201,10 +204,13 @@ impl CmdInfo {
         CMD_INFO.get()
     }
 
-    pub fn commands(&self) -> &Vec<&'static str> {
-        &self.commands
+    pub fn cmds(&self) -> &Vec<&'static str> {
+        &self.cmds
     }
     pub fn longest_len(&self) -> u8 {
         self.longest_len
+    }
+    pub fn custom_cmds(&self) -> &Vec<&'static str> {
+        &self.custom_cmds
     }
 }

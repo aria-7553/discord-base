@@ -26,7 +26,7 @@ async fn cmd_info(ctx: &Context, msg: &Message) -> CommandResult {
                 .field("Made by:", info.owner().mention(), true);
         }
         None => {
-            log(ctx, "Couln't get BotInfo for the `info` command").await;
+            log(ctx, "Couldn't get BotInfo for the `info` command").await;
             embed.description("Awkward but I think I forgot who I am..");
             is_error = true
         }
