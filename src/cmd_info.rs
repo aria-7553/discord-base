@@ -8,10 +8,14 @@ use serenity::{
 
 use crate::{globals::{BotConfig, BotInfo}, log, send_embed};
 
+/// The `info` command to give info about feedback, owner, invite, GitHub etc.
+/// # Errors
+/// Informs the user and logs if getting BotInfo or BotConfig failed, still sending all the info
+/// it could get
 #[command("info")]
 #[aliases("about", "invite", "inv")]
 #[bucket = "general"]
-#[description = "How you can add me to your server, contact my owner, my GitHub page etc."]
+#[description = "How you can add me to your server, contact my owner, find my GitHub page etc."]
 async fn cmd_info(ctx: &Context, msg: &Message) -> CommandResult {
     let mut embed = CreateEmbed::default();
     embed.footer(|f| {
