@@ -1,1 +1,0 @@
-initSidebarItems({"fn":[["cmd_prefix",""],["prefix_check","The function to run to get the dynamic prefix"]],"static":[["CMD_PREFIX_COMMAND",""],["CMD_PREFIX_COMMAND_OPTIONS",""]]});

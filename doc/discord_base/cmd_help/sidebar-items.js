@@ -1,1 +1,0 @@
-initSidebarItems({"fn":[["cmd_help",""]],"static":[["CMD_HELP",""],["CMD_HELP__OPTIONS",""]]});
