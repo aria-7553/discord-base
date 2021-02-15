@@ -1,4 +1,7 @@
 # discord-base
+![](https://img.shields.io/static/v1?color=f48fb1&labelColor=f48fb1&label=discord&message=join&logo=discord&logoColor=ffffff&style=for-the-badge&link=https://discord.gg/u6NyRUnNED)  
+![](https://img.shields.io/static/v1?color=f48fb1&labelColor=f48fb1&label=docs‎‎‎‎‎‎‎‎‎‎‎&message=read&logo=rust&style=for-the-badge&link=https%3A%2F%2Faria-7553.github.io%2Fdiscord-base%2Fdiscord_base%2F)  
+
 The repo I clone and build my bots on top of. Made with love using [Serenity](https://github.com/serenity-rs/serenity) in Rust!
 
 ## Use it
@@ -86,3 +89,6 @@ Makes everything more expensive, you now have to check the language for every me
 
 ### Customisation
 Again makes everything more expensive, since it means you can't use any static string. If someone is hosting the bot, they most likely have enough knowledge to search for a string in the source and replace it then build. It isn't necessary at all and I still tried to include customisation when it didn't mean a performance loss
+
+[docs]: https://docs.rs/serenity
+
