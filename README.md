@@ -9,7 +9,7 @@ The repo I clone and build my bots on top of. Made with love using [Serenity](ht
 4. It'll create the config file ending with `config.toml` at `target/debug/` *(If it isn't there, read the stuff in the window to see the errors)*
 5. Edit it with your text editor *(Notepad, TextEdit, nano etc.)* *(Instructions are inside)* *(The end user is able to edit it too, if you'll be sharing your bot)*
 6. Go to [the application page](https://discord.com/developers/applications), select your bot and set the description. The `info` command will use that and the account that has that application
-7. Open `main.rs` everything about the code is explained
+7. [Read the docs](https://aria-7553.github.io/discord-base/discord_base/)
 8. Do whatever you want with the code to build your bot on top
 9. Build it with `cargo build` as usual. It'll open in a terminal, close it and the bot shuts down
 
