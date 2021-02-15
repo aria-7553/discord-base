@@ -1,8 +1,9 @@
+use std::{convert::TryFrom, fs, io};
+
 use once_cell::sync::OnceCell;
 use serde::Deserialize;
 use serenity::{http::client::Http, model::id::UserId, prelude::TypeMapKey};
 use sqlx::{query, sqlite::SqliteConnectOptions, SqlitePool};
-use std::{convert::TryFrom, fs, io};
 
 const DEFAULT_CONFIG: &'static str =
     "# The token of the bot: https://discordpy.readthedocs.io/en/latest/discord.html#creating-a-bot-account

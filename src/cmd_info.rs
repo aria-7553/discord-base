@@ -1,7 +1,7 @@
 use serenity::{
     builder::CreateEmbed,
     client::Context,
-    framework::standard::{macros::command, CommandResult},
+    framework::standard::{CommandResult, macros::command},
     model::channel::Message,
     prelude::Mentionable,
 };

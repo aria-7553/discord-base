@@ -1,9 +1,10 @@
-use discord_base::{cmd_error, cmd_help::CMD_HELP, cmd_prefix::prefix_check, globals::{set_db, BotConfig, BotInfo, CmdInfo, SqlitePoolKey}, print_and_write, Handler, GENERAL_GROUP, MASTER_GROUP, set_dir};
 use serenity::{
+    Client,
     client::bridge::gateway::GatewayIntents,
     framework::{standard::buckets::LimitedFor, StandardFramework},
-    Client,
 };
+
+use discord_base::{cmd_error, cmd_help::CMD_HELP, cmd_prefix::prefix_check, GENERAL_GROUP, globals::{BotConfig, BotInfo, CmdInfo, set_db, SqlitePoolKey}, Handler, MASTER_GROUP, print_and_write, set_dir};
 
 #[tokio::main]
 async fn main() {

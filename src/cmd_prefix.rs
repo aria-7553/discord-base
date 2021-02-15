@@ -1,11 +1,12 @@
+use std::cmp::min;
+
 use serenity::{
     builder::CreateEmbed,
     client::Context,
-    framework::standard::{macros::command, Args, CommandResult},
+    framework::standard::{Args, CommandResult, macros::command},
     model::channel::Message,
 };
 use sqlx::{query, Row};
-use std::cmp::min;
 
 use crate::{
     globals::{CmdInfo, SqlitePoolKey},
@@ -121,7 +122,7 @@ pub async fn prefix_check(ctx: &Context, msg: &Message) -> Option<String> {
             log(
                 ctx,
                 format!(
-                    "Couldn't fetch prefix from the database for the prefix check: {}",
+                    "Couldn't fetch prefix from the database for the prefix check: {:?}",
                     err
                 ),
             )
@@ -133,7 +134,7 @@ pub async fn prefix_check(ctx: &Context, msg: &Message) -> Option<String> {
             Err(err) => {
                 log(
                     ctx,
-                    format!("Couldn't get the prefix column for the guild: {}", err),
+                    format!("Couldn't get the prefix column for the guild: {:?}", err),
                 )
                 .await;
                 None
