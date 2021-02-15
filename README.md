@@ -1,5 +1,5 @@
 # discord-base
-[![](https://img.shields.io/static/v1?color=f48fb1&labelColor=f48fb1&label=discord&message=join&logo=discord&logoColor=ffffff&style=for-the-badge)](https://discord.gg/u6NyRUnNED)
+[![](https://img.shields.io/static/v1?color=f48fb1&labelColor=f48fb1&label=discord&message=join&logo=discord&logoColor=ffffff&style=for-the-badge)](https://discord.gg/u6NyRUnNED)  
 [![](https://img.shields.io/static/v1?color=f48fb1&labelColor=f48fb1&label=docs‎‎‎‎‎‎‎‎‎‎‎&message=read&logo=rust&style=for-the-badge)](https://aria-7553.github.io/discord-base/discord_base)
 
 The repo I clone and build my bots on top of. Made with love using [Serenity](https://github.com/serenity-rs/serenity) in Rust!
