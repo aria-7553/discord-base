@@ -1,6 +1,5 @@
 # discord-base
-The repo I clone and build my bots on top of
-Made with love using [Serenity](https://github.com/serenity-rs/serenity) in Rust!
+The repo I clone and build my bots on top of. Made with love using [Serenity](https://github.com/serenity-rs/serenity) in Rust!
 
 ## Use it
 *This assumes you have Rust installed on your system and at least basic knowledge about the language since this repo is for developers only*
