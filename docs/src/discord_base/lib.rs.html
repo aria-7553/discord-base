@@ -1,6 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings"></script><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings"></script><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../favicon.svg">
 <link rel="alternate icon" type="image/png" href="../../favicon-16x16.png">
-<link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../discord_base/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><span class="help-button">?</span>
+<link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../discord_base/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
                 <a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
@@ -207,14 +207,6 @@
 <span id="204">204</span>
 <span id="205">205</span>
 <span id="206">206</span>
-<span id="207">207</span>
-<span id="208">208</span>
-<span id="209">209</span>
-<span id="210">210</span>
-<span id="211">211</span>
-<span id="212">212</span>
-<span id="213">213</span>
-<span id="214">214</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">env</span>, <span class="ident">fmt</span>::<span class="ident">Display</span>, <span class="ident">io</span>::<span class="ident">Write</span>};
 
@@ -251,8 +243,7 @@
 <span class="doccomment">/// - You can add your own commands to it or change its name</span>
 <span class="doccomment">/// - These commands will only run on mention or the guild prefix, not `.`</span>
 <span class="doccomment">/// - You should add your own custom commands to different groups, then they&#39;ll use `.` too</span>
-<span class="doccomment">/// - Make sure your groups only have commands NOT sub groups! The only group that can have sub</span>
-<span class="doccomment">/// groups is `Master`!</span>
+<span class="doccomment">/// - Make sure your groups only have commands NOT sub groups! The only group that can have sub groups is `Master`!</span>
 <span class="attribute">#[<span class="ident">group</span>(<span class="string">&quot;General Stuff&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">commands</span>(<span class="ident">cmd_info</span>, <span class="ident">cmd_prefix</span>)]</span>
 <span class="kw">struct</span> <span class="ident">General</span>;
@@ -262,38 +253,34 @@
 <span class="attribute">#[<span class="ident">serenity</span>::<span class="ident">async_trait</span>]</span>
 <span class="doccomment">/// The implementation you should add your own event handling functions to</span>
 <span class="kw">impl</span> <span class="ident">EventHandler</span> <span class="kw">for</span> <span class="ident">Handler</span> {
-    <span class="doccomment">/// Triggered once when the bot is ready, unlike `ready`, which might be triggered multiple</span>
-    <span class="doccomment">/// times</span>
-    <span class="ident">async</span> <span class="kw">fn</span> <span class="ident">cache_ready</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ctx</span>: <span class="ident">Context</span>, <span class="kw">_</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">GuildId</span><span class="op">&gt;</span>) {
-        <span class="doccomment">/// Sets the activity of the bot to `@{bot username} help`</span>
-        <span class="doccomment">/// # Panics</span>
-        <span class="doccomment">/// If setting it failed, meaning BotInfo wasn&#39;t initialised</span>
+    <span class="doccomment">/// Triggered once when the bot is ready, unlike `ready`, which might be triggered multiple times</span>
+    <span class="doccomment">/// - Sets the activity of the bot to `@{bot username} help`</span>
+    <span class="doccomment">/// - Prints `Connected!` and DMs the owner using `log()`</span>
+    <span class="doccomment">/// # Panics</span>
+    <span class="doccomment">/// If setting it failed, meaning BotInfo wasn&#39;t initialised</span>
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">cache_ready</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ctx</span>: <span class="ident">Context</span>, <span class="kw">_</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">GuildId</span><span class="op">&gt;</span>) {
         <span class="ident">ctx</span>.<span class="ident">set_activity</span>(<span class="ident">Activity</span>::<span class="ident">playing</span>(
             <span class="macro">format</span><span class="macro">!</span>(
                 <span class="string">&quot;@{} help&quot;</span>,
                 <span class="ident">BotInfo</span>::<span class="ident">get</span>().<span class="ident">expect</span>(<span class="string">&quot;Couldn&#39;t get BotInfo&quot;</span>).<span class="ident">name</span>()
             )
-                .<span class="ident">as_str</span>(),
+            .<span class="ident">as_str</span>(),
         ))
-            .<span class="ident">await</span>;
+        .<span class="kw">await</span>;
 
-        <span class="doccomment">/// Prints `Connected!` and DMs the owner using `log()`</span>
         <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Connected!&quot;</span>);
-        <span class="ident">log</span>(<span class="kw-2">&amp;</span><span class="ident">ctx</span>, <span class="string">&quot;Connected!&quot;</span>).<span class="ident">await</span>;
+        <span class="ident">log</span>(<span class="kw-2">&amp;</span><span class="ident">ctx</span>, <span class="string">&quot;Connected!&quot;</span>).<span class="kw">await</span>;
     }
 }
 
-<span class="doccomment">/// 1. Sets the colour of the `embed` to `11534368` (The baseline error colour according to Material</span>
-<span class="doccomment">/// Design guidelines) if `is_error` is `true`, if not, sets it to the colour in the config</span>
+<span class="doccomment">/// 1. Sets the colour of the `embed` to `11534368` (The baseline error colour according to Material Design guidelines) if `is_error` is `true`, if not, sets it to the colour in the config</span>
 <span class="doccomment">/// 2. Sends the `embed` to the `channel_id` of `reply`</span>
 <span class="doccomment">/// ## Error</span>
-<span class="doccomment">/// - Uses `log()` to inform why setting the colour failed and falls back to the `Default colour`</span>
-<span class="doccomment">/// (most likely `white`)</span>
+<span class="doccomment">/// - Uses `log()` to inform why setting the colour failed and falls back to the `Default colour` (most likely `white`)</span>
 <span class="doccomment">/// - Says why it couldn&#39;t send the embed in the channel in plain text (without embeds)</span>
-<span class="doccomment">/// - DMs the author of `reply` if that also fails, colouring the embed with the error colour and</span>
-<span class="doccomment">/// telling them to report to the admins</span>
+<span class="doccomment">/// - DMs the author of `reply` if that also fails, colouring the embed with the error colour and telling them to report to the admins</span>
 <span class="doccomment">/// - Uses `log()` to inform why it failed if even that fails</span>
-<span class="kw">pub</span> <span class="ident">async</span> <span class="kw">fn</span> <span class="ident">send_embed</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>, <span class="ident">reply</span>: <span class="kw-2">&amp;</span><span class="ident">Message</span>, <span class="ident">is_error</span>: <span class="ident">bool</span>, <span class="kw-2">mut</span> <span class="ident">embed</span>: <span class="ident">CreateEmbed</span>) {
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">send_embed</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>, <span class="ident">reply</span>: <span class="kw-2">&amp;</span><span class="ident">Message</span>, <span class="ident">is_error</span>: <span class="ident">bool</span>, <span class="kw-2">mut</span> <span class="ident">embed</span>: <span class="ident">CreateEmbed</span>) {
     <span class="kw">let</span> <span class="ident">channel</span> <span class="op">=</span> <span class="ident">reply</span>.<span class="ident">channel_id</span>;
     <span class="kw">if</span> <span class="ident">is_error</span> {
         <span class="ident">embed</span>.<span class="ident">colour</span>(<span class="number">11534368</span>);
@@ -302,14 +289,14 @@
             <span class="prelude-val">Some</span>(<span class="ident">config</span>) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="ident">embed</span>.<span class="ident">colour</span>(<span class="ident">config</span>.<span class="ident">colour</span>());
             }
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">log</span>(<span class="ident">ctx</span>, <span class="string">&quot;Couldn&#39;t get BotConfig to get colour&quot;</span>).<span class="ident">await</span>,
+            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">log</span>(<span class="ident">ctx</span>, <span class="string">&quot;Couldn&#39;t get BotConfig to get colour&quot;</span>).<span class="kw">await</span>,
         };
     };
 
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="ident">channel</span>.<span class="ident">send_message</span>(<span class="ident">ctx</span>, <span class="op">|</span><span class="ident">m</span><span class="op">|</span> <span class="ident">m</span>.<span class="ident">set_embed</span>(<span class="ident">embed</span>)).<span class="ident">await</span> {
+    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="ident">channel</span>.<span class="ident">send_message</span>(<span class="ident">ctx</span>, <span class="op">|</span><span class="ident">m</span><span class="op">|</span> <span class="ident">m</span>.<span class="ident">set_embed</span>(<span class="ident">embed</span>)).<span class="kw">await</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="ident">channel</span>
             .<span class="ident">say</span>(<span class="ident">ctx</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Oops, couldn&#39;t send the message 🤦‍♀️: {}&quot;</span>, <span class="ident">err</span>))
-            .<span class="ident">await</span>
+            .<span class="kw">await</span>
         {
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="ident">reply</span>
                 .<span class="ident">author</span>
@@ -326,7 +313,7 @@
                             ))
                     })
                 })
-                .<span class="ident">await</span>
+                .<span class="kw">await</span>
             {
                 <span class="ident">log</span>(
                     <span class="ident">ctx</span>,
@@ -335,7 +322,7 @@
                         <span class="ident">err</span>
                     ),
                 )
-                .<span class="ident">await</span>
+                .<span class="kw">await</span>
             }
         }
     }
@@ -344,11 +331,11 @@
 <span class="doccomment">/// DMs the owner of the bot, as in the application info, with the message</span>
 <span class="doccomment">/// # Error</span>
 <span class="doccomment">/// Falls back to `print_and_write()` also including why it couldn&#39;t log</span>
-<span class="kw">pub</span> <span class="ident">async</span> <span class="kw">fn</span> <span class="ident">log</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>, <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">Display</span> <span class="op">+</span> <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>) {
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">log</span>(<span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">Context</span>, <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">Display</span> <span class="op">+</span> <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>) {
     <span class="kw">match</span> <span class="ident">BotInfo</span>::<span class="ident">get</span>() {
-        <span class="prelude-val">Some</span>(<span class="ident">info</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">info</span>.<span class="ident">owner</span>().<span class="ident">create_dm_channel</span>(<span class="ident">ctx</span>).<span class="ident">await</span> {
+        <span class="prelude-val">Some</span>(<span class="ident">info</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">info</span>.<span class="ident">owner</span>().<span class="ident">create_dm_channel</span>(<span class="ident">ctx</span>).<span class="kw">await</span> {
             <span class="prelude-val">Ok</span>(<span class="ident">channel</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="ident">channel</span>.<span class="ident">say</span>(<span class="ident">ctx</span>, <span class="kw-2">&amp;</span><span class="ident">msg</span>).<span class="ident">await</span> {
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="ident">channel</span>.<span class="ident">say</span>(<span class="ident">ctx</span>, <span class="kw-2">&amp;</span><span class="ident">msg</span>).<span class="kw">await</span> {
                     <span class="ident">print_and_write</span>(<span class="macro">format</span><span class="macro">!</span>(
                         <span class="string">&quot;Couldn&#39;t DM the owner when trying to log: {}\nMessage: {}&quot;</span>,
                         <span class="ident">err</span>, <span class="ident">msg</span>
@@ -367,8 +354,7 @@
     };
 }
 
-<span class="doccomment">/// Prints the `msg` and the timestamp and appends it (or creates if it doesn&#39;t exist) to the log</span>
-<span class="doccomment">/// file in the config</span>
+<span class="doccomment">/// Prints the `msg` and the timestamp and appends it (or creates if it doesn&#39;t exist) to the log file in the config</span>
 <span class="doccomment">/// - The format of the message is: `8 July Sunday 21:34:54: {message}\n\n`</span>
 <span class="doccomment">/// - This is used as fallback when `log()` fails</span>
 <span class="doccomment">/// # Error</span>
@@ -403,8 +389,7 @@
     }
 }
 
-<span class="doccomment">/// 1. Sets the working directory to the directory of the binary, so that the config file and all</span>
-<span class="doccomment">/// are saved to the same directory as the file, as expected</span>
+<span class="doccomment">/// 1. Sets the working directory to the directory of the binary, so that the config file and all are saved to the same directory as the file, as expected</span>
 <span class="doccomment">/// 2. Also prints the working directory, just for info</span>
 <span class="doccomment">/// # Error</span>
 <span class="doccomment">/// - Prints why it couldn&#39;t change the directory</span>
@@ -429,6 +414,5 @@
         <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Couldn&#39;t even get the current directory: {}&quot;</span>, <span class="ident">err</span>),
     }
 }
-
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "discord_base";</script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

@@ -33,8 +33,7 @@ struct Master;
 /// - You can add your own commands to it or change its name
 /// - These commands will only run on mention or the guild prefix, not `.`
 /// - You should add your own custom commands to different groups, then they'll use `.` too
-/// - Make sure your groups only have commands NOT sub groups! The only group that can have sub
-/// groups is `Master`!
+/// - Make sure your groups only have commands NOT sub groups! The only group that can have sub groups is `Master`!
 #[group("General Stuff")]
 #[commands(cmd_info, cmd_prefix)]
 struct General;
@@ -44,36 +43,32 @@ pub struct Handler;
 #[serenity::async_trait]
 /// The implementation you should add your own event handling functions to
 impl EventHandler for Handler {
-    /// Triggered once when the bot is ready, unlike `ready`, which might be triggered multiple
-    /// times
+    /// Triggered once when the bot is ready, unlike `ready`, which might be triggered multiple times
+    /// - Sets the activity of the bot to `@{bot username} help`
+    /// - Prints `Connected!` and DMs the owner using `log()`
+    /// # Panics
+    /// If setting it failed, meaning BotInfo wasn't initialised
     async fn cache_ready(&self, ctx: Context, _: Vec<GuildId>) {
-        /// Sets the activity of the bot to `@{bot username} help`
-        /// # Panics
-        /// If setting it failed, meaning BotInfo wasn't initialised
         ctx.set_activity(Activity::playing(
             format!(
                 "@{} help",
                 BotInfo::get().expect("Couldn't get BotInfo").name()
             )
-                .as_str(),
+            .as_str(),
         ))
-            .await;
+        .await;
 
-        /// Prints `Connected!` and DMs the owner using `log()`
         println!("Connected!");
         log(&ctx, "Connected!").await;
     }
 }
 
-/// 1. Sets the colour of the `embed` to `11534368` (The baseline error colour according to Material
-/// Design guidelines) if `is_error` is `true`, if not, sets it to the colour in the config
+/// 1. Sets the colour of the `embed` to `11534368` (The baseline error colour according to Material Design guidelines) if `is_error` is `true`, if not, sets it to the colour in the config
 /// 2. Sends the `embed` to the `channel_id` of `reply`
 /// ## Error
-/// - Uses `log()` to inform why setting the colour failed and falls back to the `Default colour`
-/// (most likely `white`)
+/// - Uses `log()` to inform why setting the colour failed and falls back to the `Default colour` (most likely `white`)
 /// - Says why it couldn't send the embed in the channel in plain text (without embeds)
-/// - DMs the author of `reply` if that also fails, colouring the embed with the error colour and
-/// telling them to report to the admins
+/// - DMs the author of `reply` if that also fails, colouring the embed with the error colour and telling them to report to the admins
 /// - Uses `log()` to inform why it failed if even that fails
 pub async fn send_embed(ctx: &Context, reply: &Message, is_error: bool, mut embed: CreateEmbed) {
     let channel = reply.channel_id;
@@ -149,8 +144,7 @@ pub async fn log(ctx: &Context, msg: impl Display + AsRef<[u8]>) {
     };
 }
 
-/// Prints the `msg` and the timestamp and appends it (or creates if it doesn't exist) to the log
-/// file in the config
+/// Prints the `msg` and the timestamp and appends it (or creates if it doesn't exist) to the log file in the config
 /// - The format of the message is: `8 July Sunday 21:34:54: {message}\n\n`
 /// - This is used as fallback when `log()` fails
 /// # Error
@@ -185,8 +179,7 @@ pub fn print_and_write(msg: impl Display) {
     }
 }
 
-/// 1. Sets the working directory to the directory of the binary, so that the config file and all
-/// are saved to the same directory as the file, as expected
+/// 1. Sets the working directory to the directory of the binary, so that the config file and all are saved to the same directory as the file, as expected
 /// 2. Also prints the working directory, just for info
 /// # Error
 /// - Prints why it couldn't change the directory
@@ -211,4 +204,3 @@ pub fn set_dir() {
         Err(err) => println!("Couldn't even get the current directory: {}", err),
     }
 }
-

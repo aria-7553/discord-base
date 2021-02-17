@@ -31,10 +31,8 @@ impl TypeMapKey for SqlitePoolKey {
     type Value = SqlitePool;
 }
 
-/// 1. Opens a connection pool to the database file at the config file, creating it if it doesn't
-/// exist
-/// 2. Runs the query given, creating the `prefixes` table (You should add your own things to it to
-/// prepare the database)
+/// 1. Opens a connection pool to the database file at the config file, creating it if it doesn't exist
+/// 2. Runs the query given, creating the `prefixes` table (You should add your own things to it to prepare the database)
 /// - DO NOT modify the `prefixes` table yourself!
 /// # Panics
 /// - If BotConfig isn't initialised
@@ -80,16 +78,13 @@ pub struct BotConfig {
 static BOT_CONFIG: OnceCell<BotConfig> = OnceCell::new();
 
 impl BotConfig {
-    /// Serialises the values in the config file at the `config_path` to `BotConfig` and saves it
-    /// to `BOT_CONFIG` or creates the file at `config_path` and writes `DEFAULT_CONFIG` to it if
-    /// it doesn't exist
+    /// Serialises the values in the config file at the `config_path` to `BotConfig` and saves it to `BOT_CONFIG` or creates the file at `config_path` and writes `DEFAULT_CONFIG` to it if it doesn't exist
+    /// - You can change the `config_path` here to customise, using directories or something other than `.toml` as the extension isn't recommended!
     /// # Panics
     /// - If the file wasn't found, also creating the file and telling to edit it
-    /// - If the file couldn't be created, also printing `DEFAULT_CONFIG` and telling to write it
-    /// manually
+    /// - If the file couldn't be created, also printing `DEFAULT_CONFIG` and telling to write it manually
     /// - If reading the file to string failed for another reason
-    /// - If parsing the file to `BotConfig` failed, meaning the file is written wrong, also
-    /// telling to fix it
+    /// - If parsing the file to `BotConfig` failed, meaning the file is written wrong, also telling to fix it
     /// - If saving it to BOT_CONFIG failed
     pub fn set(config_path: &str) {
         let config: BotConfig =
@@ -104,7 +99,7 @@ impl BotConfig {
                     panic!(err)
                 }
             }))
-                .expect("Looks like something is wrong with your config");
+            .expect("Looks like something is wrong with your config");
 
         BOT_CONFIG
             .set(config)
@@ -140,8 +135,7 @@ impl BotConfig {
     }
 }
 
-/// The struct to hold the information found from the application so that we can set it to a
-/// static to avoid API requests
+/// The struct to hold the information found from the application so that we can set it to a static to avoid API requests
 pub struct BotInfo {
     owner: UserId,
     user: UserId,
@@ -212,8 +206,7 @@ impl BotInfo {
     }
 }
 
-/// The struct to hold the information about commands, found from the `Master` group so that we
-/// can set it to a static to avoid iterating every time
+/// The struct to hold the information about commands, found from the `Master` group so that we can set it to a static to avoid iterating every time
 pub struct CmdInfo {
     cmds: Vec<&'static str>,
     longest_len: u8,
@@ -224,8 +217,7 @@ pub struct CmdInfo {
 static CMD_INFO: OnceCell<CmdInfo> = OnceCell::new();
 
 impl CmdInfo {
-    /// 1. Iterates through the sub groups of `Master`, flattening their commands' names and adding
-    /// it to `cmds` and to `custom_cmds` if its group's name isn't `General Stuff`
+    /// 1. Iterates through the sub groups of `Master`, flattening their commands' names and adding it to `cmds` and to `custom_cmds` if its group's name isn't `General Stuff`
     /// 2. Gets the command with the longest characters, saves its character count to `longest_len`
     /// 3. Creates a CmdInfo from them and saves it to `CMD_INFO`
     /// # Panics
@@ -250,7 +242,7 @@ impl CmdInfo {
                 .max()
                 .expect("No commands found"),
         )
-            .expect("Command name too long")
+        .expect("Command name too long")
             + 10;
 
         CMD_INFO
