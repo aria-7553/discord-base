@@ -1,9 +1,7 @@
-use std::cmp::min;
-
 use serenity::{
     builder::CreateEmbed,
     client::Context,
-    framework::standard::{Args, CommandResult, macros::command},
+    framework::standard::{macros::command, Args, CommandResult},
     model::channel::Message,
 };
 use sqlx::{query, Row};
@@ -119,11 +117,14 @@ async fn cmd_prefix(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
 pub async fn prefix_check(ctx: &Context, msg: &Message) -> Option<String> {
     let guild_id = msg.guild_id?;
     let cmd_info = CmdInfo::get()?;
-    let boundary = min(msg.content.chars().count(), cmd_info.longest_len().into());
+    let first_chars = msg
+        .content
+        .get(..cmd_info.longest_len().into())
+        .unwrap_or(&msg.content);
 
     let mut is_cmd = false;
     for cmd in cmd_info.cmds().iter() {
-        if msg.content[..boundary].contains(cmd) {
+        if first_chars.contains(cmd) {
             is_cmd = true;
             if msg.content.starts_with(".") && cmd_info.custom_cmds().contains(cmd) {
                 return Some(".".to_string());
@@ -156,7 +157,7 @@ pub async fn prefix_check(ctx: &Context, msg: &Message) -> Option<String> {
                     err
                 ),
             )
-                .await;
+            .await;
             None
         }
         Ok(row) => match row?.try_get(0) {
@@ -166,7 +167,7 @@ pub async fn prefix_check(ctx: &Context, msg: &Message) -> Option<String> {
                     ctx,
                     format!("Couldn't get the prefix column for the guild: {:?}", err),
                 )
-                    .await;
+                .await;
                 None
             }
         },
