@@ -117,16 +117,13 @@ async fn cmd_prefix(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
 pub async fn prefix_check(ctx: &Context, msg: &Message) -> Option<String> {
     let guild_id = msg.guild_id?;
     let cmd_info = CmdInfo::get()?;
-    let first_chars = msg
-        .content
-        .get(..cmd_info.longest_len().into())
-        .unwrap_or(&msg.content);
+    let content = msg.content.as_str();
 
     let mut is_cmd = false;
     for cmd in cmd_info.cmds().iter() {
-        if first_chars.contains(cmd) {
+        if content.contains(cmd) {
             is_cmd = true;
-            if msg.content.starts_with(".") && cmd_info.custom_cmds().contains(cmd) {
+            if content.starts_with(".") && cmd_info.custom_cmds().contains(cmd) {
                 return Some(".".to_string());
             }
         }
