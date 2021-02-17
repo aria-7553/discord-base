@@ -13,6 +13,9 @@ token = \"TOKEN HERE\"
 # The name of the file for logging stuff if it couldn't DM you
 log_file = \"logs.txt\"
 
+# If the bot should DM you when it's added to a guild: Must be either \"true\" or \"false\"!
+log_guild_added = true
+
 # The name of the file to use for database. Should end with: .sqlite, .sqlite3, .db or .db3
 database_file = \"database.sqlite\"
 
@@ -68,6 +71,7 @@ pub async fn set_db() -> SqlitePool {
 pub struct BotConfig {
     token: String,
     log_file: String,
+    log_guild_added: bool,
     database_file: String,
     invite: String,
     github: String,
@@ -120,6 +124,10 @@ impl BotConfig {
     /// The getter for the `log_file` field, to be used with `get()`
     pub fn log_file(&self) -> &String {
         &self.log_file
+    }
+    /// The getter for the `log_guild_added` field, to be used with `get()`
+    pub fn log_guild_added(&self) -> bool {
+        self.log_guild_added
     }
     /// The getter for the `invite` field, to be used with `get()`
     pub fn invite(&self) -> &String {

@@ -4,7 +4,12 @@ use serenity::{
     builder::CreateEmbed,
     client::{Context, EventHandler},
     framework::standard::macros::group,
-    model::{channel::Message, id::GuildId, misc::Mentionable, prelude::Activity},
+    model::{
+        channel::Message,
+        id::GuildId,
+        misc::Mentionable,
+        prelude::{Activity, Ready},
+    },
 };
 
 use globals::{BotConfig, BotInfo};
@@ -43,23 +48,35 @@ pub struct Handler;
 #[serenity::async_trait]
 /// The implementation you should add your own event handling functions to
 impl EventHandler for Handler {
-    /// Triggered once when the bot is ready, unlike `ready`, which might be triggered multiple times
+    /// Triggered when the bot or a new shard is ready
     /// - Sets the activity of the bot to `@{bot username} help`
-    /// - Prints `Connected!` and DMs the owner using `log()`
-    /// # Panics
-    /// If setting it failed, meaning BotInfo wasn't initialised
-    async fn cache_ready(&self, ctx: Context, _: Vec<GuildId>) {
+    async fn ready(&self, ctx: Context, info: Ready) {
         ctx.set_activity(Activity::playing(
-            format!(
-                "@{} help",
-                BotInfo::get().expect("Couldn't get BotInfo").name()
-            )
-            .as_str(),
+            format!("@{} help", info.user.name).as_str(),
         ))
         .await;
+    }
 
-        println!("Connected!");
-        log(&ctx, "Connected!").await;
+    /// Triggered when the bot is ready or added to a guild
+    /// - Prints the number of guilds the bot is in and DMs the owner using `log()`
+    /// # Panics
+    /// If setting it failed, meaning BotInfo wasn't initialised
+    async fn cache_ready(&self, ctx: Context, guilds: Vec<GuildId>) {
+        if let Some(config) = BotConfig::get() {
+            if config.log_guild_added() {
+                let msg = format!("In {} guilds!", guilds.len());
+                println!("{}", msg);
+                log(&ctx, msg).await;
+            }
+        } else {
+            {
+                log(
+                    &ctx,
+                    "Couldn't get BotConfig to see if guild adds should be added",
+                )
+                .await
+            }
+        }
     }
 }
 
