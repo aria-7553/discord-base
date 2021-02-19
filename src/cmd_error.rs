@@ -7,8 +7,6 @@ use serenity::{
 
 use crate::send_embed;
 
-/// The function to run on a user-related command error. Informs the user unless its them being
-/// rate limited for the second time
 #[hook]
 pub async fn handle(ctx: &Context, msg: &Message, error: DispatchError) {
     if let DispatchError::Ratelimited(info) = &error {
@@ -67,10 +65,6 @@ pub async fn handle(ctx: &Context, msg: &Message, error: DispatchError) {
     send_embed(ctx, msg, true, embed).await;
 }
 
-/// The function to run if the user exceeded the bucket limits. Informs the user by adding a
-/// reaction to their message
-/// # Errors
-/// Tells the user in an embed why it couldn't react
 #[hook]
 pub async fn delay_action(ctx: &Context, msg: &Message) {
     if let Err(err) = msg.react(ctx, '😤').await {

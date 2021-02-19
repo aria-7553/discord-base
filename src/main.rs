@@ -11,17 +11,6 @@ use discord_base::{
     globals::{set_db, BotConfig, BotInfo, CmdInfo, SqlitePoolKey},
     print_and_write, set_dir, Handler, GENERAL_GROUP, MASTER_GROUP,
 };
-
-/// You should add your own requirements to get the bot started here
-/// 1. Sets every global
-/// 2. Creates the framework and the general and expensive buckets. You can add your own buckets to it or customise them. Customising anything else isn't recommended!
-/// - You must add your groups there the same way!
-/// 3. Creates the client with the required intents and starts it in auto sharded mode
-/// - You should add more intents as you require them. Customising anything else isn't recommended!
-/// # Panics
-/// If getting the BotConfig, BotInfo or creating the client failed
-/// # Errors
-/// If starting the client failed, probably meaning an error on Discord's side
 #[tokio::main]
 async fn main() {
     set_dir();

@@ -16,40 +16,24 @@ use globals::{BotConfig, BotInfo};
 
 use crate::{cmd_info::CMD_INFO_COMMAND, cmd_prefix::CMD_PREFIX_COMMAND};
 
-/// The module for error handling of the commands
 pub mod cmd_error;
-/// The module for the `help` command
 pub mod cmd_help;
-/// The module for the `info` command
 pub mod cmd_info;
-/// The module for the `prefix` command
 pub mod cmd_prefix;
-/// The module for the statics and structs to save the statics to
 pub mod globals;
 
-/// The hidden group for all the commands to be added to
-/// - ONLY add your own groups to `sub_groups`
 #[group("Master")]
 #[sub_groups(General)]
 #[help_available(false)]
 struct Master;
 
-/// The group for the commands provided by default
-/// - You can add your own commands to it or change its name
-/// - These commands will only run on mention or the guild prefix, not `.`
-/// - You should add your own custom commands to different groups, then they'll use `.` too
-/// - Make sure your groups only have commands NOT sub groups! The only group that can have sub groups is `Master`!
 #[group("General Stuff")]
 #[commands(cmd_info, cmd_prefix)]
 struct General;
 
-/// The event handler struct to implement EventHandler for
 pub struct Handler;
 #[serenity::async_trait]
-/// The implementation you should add your own event handling functions to
 impl EventHandler for Handler {
-    /// Triggered when the bot or a new shard is ready
-    /// - Sets the activity of the bot to `@{bot username} help`
     async fn ready(&self, ctx: Context, info: Ready) {
         ctx.set_activity(Activity::playing(
             format!("@{} help", info.user.name).as_str(),
@@ -57,10 +41,6 @@ impl EventHandler for Handler {
         .await;
     }
 
-    /// Triggered when the bot is ready or added to a guild
-    /// - Prints the number of guilds the bot is in and DMs the owner using `log()`
-    /// # Panics
-    /// If setting it failed, meaning BotInfo wasn't initialised
     async fn cache_ready(&self, ctx: Context, guilds: Vec<GuildId>) {
         if let Some(config) = BotConfig::get() {
             if config.log_guild_added() {
@@ -80,13 +60,6 @@ impl EventHandler for Handler {
     }
 }
 
-/// 1. Sets the colour of the `embed` to `11534368` (The baseline error colour according to Material Design guidelines) if `is_error` is `true`, if not, sets it to the colour in the config
-/// 2. Sends the `embed` to the `channel_id` of `reply`
-/// ## Error
-/// - Uses `log()` to inform why setting the colour failed and falls back to the `Default colour` (most likely `white`)
-/// - Says why it couldn't send the embed in the channel in plain text (without embeds)
-/// - DMs the author of `reply` if that also fails, colouring the embed with the error colour and telling them to report to the admins
-/// - Uses `log()` to inform why it failed if even that fails
 pub async fn send_embed(ctx: &Context, reply: &Message, is_error: bool, mut embed: CreateEmbed) {
     let channel = reply.channel_id;
     if is_error {
@@ -135,9 +108,6 @@ pub async fn send_embed(ctx: &Context, reply: &Message, is_error: bool, mut embe
     }
 }
 
-/// DMs the owner of the bot, as in the application info, with the message
-/// # Error
-/// Falls back to `print_and_write()` also including why it couldn't log
 pub async fn log(ctx: &Context, msg: impl Display + AsRef<[u8]>) {
     match BotInfo::get() {
         Some(info) => match info.owner().create_dm_channel(ctx).await {
@@ -161,11 +131,6 @@ pub async fn log(ctx: &Context, msg: impl Display + AsRef<[u8]>) {
     };
 }
 
-/// Prints the `msg` and the timestamp and appends it (or creates if it doesn't exist) to the log file in the config
-/// - The format of the message is: `8 July Sunday 21:34:54: {message}\n\n`
-/// - This is used as fallback when `log()` fails
-/// # Error
-/// - Prints the message and why writing it failed
 pub fn print_and_write(msg: impl Display) {
     let mut print_and_write = format!(
         "{}: {}\n\n",
@@ -196,11 +161,6 @@ pub fn print_and_write(msg: impl Display) {
     }
 }
 
-/// 1. Sets the working directory to the directory of the binary, so that the config file and all are saved to the same directory as the file, as expected
-/// 2. Also prints the working directory, just for info
-/// # Error
-/// - Prints why it couldn't change the directory
-/// - Doesn't panic since the program can still run in the other directory which will be printed
 pub fn set_dir() {
     match env::current_exe() {
         Ok(path) => match path.parent() {

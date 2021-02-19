@@ -8,10 +8,6 @@ use serenity::{
 
 use crate::{globals::{BotConfig, BotInfo}, log, send_embed};
 
-/// The `info` command to give info about feedback, owner, invite, GitHub etc.
-/// # Errors
-/// Informs the user and logs if getting BotInfo or BotConfig failed, still sending all the info
-/// it could get
 #[command("info")]
 #[aliases("about", "invite", "inv")]
 #[bucket = "general"]
