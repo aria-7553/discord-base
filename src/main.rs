@@ -11,6 +11,7 @@ use discord_base::{
     globals::{set_db, BotConfig, BotInfo, CmdInfo, SqlitePoolKey},
     print_and_write, set_dir, Handler, GENERAL_GROUP, MASTER_GROUP,
 };
+
 #[tokio::main]
 async fn main() {
     set_dir();

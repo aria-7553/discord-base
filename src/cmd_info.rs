@@ -1,12 +1,15 @@
 use serenity::{
     builder::CreateEmbed,
     client::Context,
-    framework::standard::{CommandResult, macros::command},
+    framework::standard::{macros::command, CommandResult},
     model::channel::Message,
     prelude::Mentionable,
 };
 
-use crate::{globals::{BotConfig, BotInfo}, log, send_embed};
+use crate::{
+    globals::{BotConfig, BotInfo},
+    log, send_embed,
+};
 
 #[command("info")]
 #[aliases("about", "invite", "inv")]
