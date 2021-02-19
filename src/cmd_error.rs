@@ -1,4 +1,5 @@
-use serenity::{builder::CreateEmbed,
+use serenity::{
+    builder::CreateEmbed,
     client::Context,
     framework::standard::{macros::hook, DispatchError, Reason},
     model::channel::Message,
